@@ -81,7 +81,7 @@ def VindSets(kaarten): #algoritme dat voor een willekeurig aantal kaarten alle m
                 if IsSet(kaart1,kaart2,kaart3):
                     sets.append([kaart1,kaart2,kaart3])
                     
-def CreëerPot(): #creëert een lijst met alle mogelijke kaarten
+def Pot(): #creëert een lijst met alle mogelijke kaarten
     pot = []
     for i in range(3):
         for j in range(3):
