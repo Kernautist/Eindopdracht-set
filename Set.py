@@ -24,12 +24,18 @@ LegendaAantal = {
 class Kaart:
     
     def __init__(self, kleur=0, figuur=0, opvulling=0, aantal=0):
-        self.kleur = kleur #dit 'attatcht' de kleur daadwerkelijk aan het object self.
-        self.figuur = figuur
-        self.opvulling = opvulling
-        self.aantal = aantal
+        if type(kleur)==list:
+            self.kleur = kleur[0] #dit 'attatcht' de kleur daadwerkelijk aan het object self.
+            self.figuur = kleur[1]
+            self.opvulling = kleur[2]
+            self.aantal = kleur[3]
+        else:
+            self.kleur = kleur #dit 'attatcht' de kleur daadwerkelijk aan het object self.
+            self.figuur = figuur
+            self.opvulling = opvulling
+            self.aantal = aantal
     
-    def __list__(self):
+    def lijst(self):
         return [self.kleur, self.figuur, self.opvulling, self.aantal]
     
     def __str__(self): #zo kunnen we kaarten printen en dus de eigenschappen chekken
@@ -78,8 +84,9 @@ def VindSets(kaarten): #algoritme dat voor een willekeurig aantal kaarten alle m
             kaart2 = kaarten[j]
             for k in range(j,len(kaarten)): #door kaarten met index 0 t/m j niet mee te rekenen, voorkomen we dat er dubbele sets gevonden worden.
                 kaart3 = kaarten[k]
-                if IsSet(kaart1,kaart2,kaart3):
+                if IsSet(Kaart(kaart1),Kaart(kaart2),Kaart(kaart3)): #Als ze een set vormen, voeg ze dan toe aan de lijst met sets
                     sets.append([kaart1,kaart2,kaart3])
+    return sets
                     
 def Pot(): #creëert een lijst met alle mogelijke kaarten
     pot = []
@@ -87,6 +94,6 @@ def Pot(): #creëert een lijst met alle mogelijke kaarten
         for j in range(3):
             for k in range(3):
                 for l in range(3):
-                    kaart = list(Kaart(i,j,k,l)) #zorgt ervoor dat de kaart als lijst opgeslagen wordt
+                    kaart = Kaart(i,j,k,l).lijst() #zorgt ervoor dat de kaart als lijst opgeslagen wordt
                     pot.append(kaart) #voegt de gevonden kaart toe aan de pot
     return pot
