@@ -53,8 +53,7 @@ class Kaart:
     
 def IsSet(kaart1, kaart2, kaart3): #algoritme dat voor 3 gegeven kaarten controleert of ze een set vormen
     for eigenschap in ['kleur', 'figuur', 'opvulling', 'aantal']: # we gaan alle eigenschappen los bijlangs.
-        #We willen nu per eigenschap checken dat ofwel alle kaarten gelijk zijn, ofwel allemaal verschillend
-        
+        #We willen nu per eigenschap checken dat ofwel alle kaarten gelijk zijn, ofwel allemaal verschillend       
         #Dit checken we in onderstaand if-statement:
         if getattr(kaart1, eigenschap) == getattr(kaart2, eigenschap): #dit is True als kaart 1 en 2 gelijke eigenschap hebben, maar False als ze andere eigenschap hebben.
             #Als het True is, moet kaart 3 ook gelijke eigenschap hebben als kaart1 (en daarmee ook kaart2).
@@ -72,11 +71,9 @@ def IsSet(kaart1, kaart2, kaart3): #algoritme dat voor 3 gegeven kaarten control
             else:
                 #In dit geval heeft kaart3 gelijke eigenschap als kaart1 of kaart2, terwijl kaart1 en kaart2 verschillende eigenschap hebben.
                 #Het is dus geen set, en we returnen False.
-                return False
-            
+                return False        
     #Als deze code bereikt wordt, betekent dat dat er geen foute set is aangetroffen. We returnen daarom True
     return True
-
 
 def VindSets(kaarten): #algoritme dat voor een willekeurig aantal kaarten alle mogelijke sets geeft.
     sets = [] #de gevonden sets
@@ -92,14 +89,22 @@ def VindSets(kaarten): #algoritme dat voor een willekeurig aantal kaarten alle m
                     sets_index.append([i + 1, j + 1, k + 1])  #Voegt de index van de drie kaarten toe aan een lijst.
     return sets, sets_index
                     
-
-
 def PrintVindSets(kaarten):
     if len(VindSets(kaarten)[0]) == 0:
         print('Geen sets gevonden!')
     else:
         print(VindSets(kaarten)[0][0])
-        
+
+def Pot(): #creëert een lijst met alle mogelijke kaarten
+    pot = []
+    for i in range(3):
+        for j in range(3):
+            for k in range(3):
+                for l in range(3):
+                    kaart = Kaart(i,j,k,l).lijst() #zorgt ervoor dat de kaart als lijst opgeslagen wordt.
+                    pot.append(kaart) #voegt de gevonden kaart toe aan de pot.
+    random.shuffle(pot) #Zorgt ervoor dat de pot in een willekeurige volgorde is.
+    return pot
 
 def vervang_kaarten(kaarten, pot):      
     while len(VindSets(kaarten)[0]) == 0:
