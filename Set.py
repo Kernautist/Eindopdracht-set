@@ -82,7 +82,8 @@ def VindSets(kaarten): #algoritme dat voor een willekeurig aantal kaarten alle m
     sets = [] #de gevonden sets
     for i in range(len(kaarten)):
         kaart1 = kaarten[i]
-        for j in range(i + 1,len(kaarten)): #door kaarten met index 0 t/m i niet mee te rekenen, voorkomen we dat er dubbele sets gevonden worden. Ook zorgt dit ervoor dat kaarten geen set met zichzelf vormen.
+        for j in range(i + 1,len(kaarten)): #door kaarten met index 0 t/m i niet mee te rekenen, voorkomen we dat er dubbele sets gevonden worden. 
+            #Ook zorgt dit ervoor dat kaarten geen set met zichzelf vormen.
             kaart2 = kaarten[j]
             for k in range(j + 1,len(kaarten)): #door kaarten met index 0 t/m j niet mee te rekenen, voorkomen we dat er dubbele sets gevonden worden.
                 kaart3 = kaarten[k]
