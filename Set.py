@@ -1,3 +1,5 @@
+import random
+
 #In het programma zullen we de eigenschappen van de kaarten aangeven met 0, 1 of 2
 #In onderstaande dictionaries staat wat voor betekenis dit getal daadwerkelijk heeft
 
@@ -20,8 +22,6 @@ LegendaAantal = {
 0 : '1',
 1 : '2',
 2 : '3'}
-
-import random
 
 class Kaart:
     
