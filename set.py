@@ -40,7 +40,9 @@ class Kaart:
     def lijst(self):
         return [self.kleur, self.figuur, self.opvulling, self.aantal]
     
-    def __str__(self): #zo kunnen we kaarten printen en dus de eigenschappen chekken
+    ''' Onderstaande functie kan wat mij betreft verwijderd worden na het programma af is, het heeft namelijk geen functie in het computerprogramma zelf.'''
+    
+    def __str__(self): #zo kunnen we kaarten printen en dus de eigenschappen chekken.
         # Onderstaand geeft een string van de vorm 'Kleur = 1 = purple', waar 1 en purple eigenlijk hetzelfde zijn.
         stringkleur = 'Kleur = ' + str(self.kleur) + ' = ' + LegendaKleur[self.kleur]
         stringfiguur = '\nFiguur = ' + str(self.figuur) + ' = ' + LegendaFiguur[self.figuur] #\n creëert nieuwe regel
@@ -50,6 +52,16 @@ class Kaart:
         outputstring = stringkleur + stringfiguur + stringopvulling + stringaantal
     
         return outputstring
+    
+    def gifnaam(self): # Deze functie creëert de naam van het .gif bestand bijbehorend bij de kaart
+        kleur = LegendaKleur[self.kleur]
+        figuur = LegendaFiguur[self.figuur]
+        opvulling = LegendaOpvulling[self.opvulling]
+        aantal = LegendaAantal[self.aantal]
+        
+        output = kleur + figuur + opvulling + aantal + '.gif'
+        
+        return output
     
 def IsSet(kaart1, kaart2, kaart3): #algoritme dat voor 3 gegeven kaarten controleert of ze een set vormen
     for eigenschap in ['kleur', 'figuur', 'opvulling', 'aantal']: # we gaan alle eigenschappen los bijlangs.
