@@ -37,6 +37,7 @@ while True: # deze loop wordt gerund terwijl het spel gespeeld wordt, tot het sp
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_RETURN:
                 print(text) # Hier wat toevoegen
+                print(Kaarten[int(text) -1])
                 kaart_keuze.append(text)
                 text = ''
                 scherm.fill(pygame.Color("black"), (input_box.x + 450, input_box.y + 5, 140, 32))
@@ -60,9 +61,13 @@ while True: # deze loop wordt gerund terwijl het spel gespeeld wordt, tot het sp
     3 6 9 12
     '''
     if len(kaart_keuze) == 3:
-        if set.IsSet(int(kaart_keuze[0]), int(kaart_keuze[1]), int(kaart_keuze[2])):
+        Kaart1 = set.Kaart(Kaarten[int(kaart_keuze[0]) -1])
+        Kaart2 = set.Kaart(Kaarten[int(kaart_keuze[1]) -1])
+        Kaart3 = set.Kaart(Kaarten[int(kaart_keuze[2]) -1])
+        
+        if set.IsSet(Kaart1, Kaart2, Kaart3):
             for i in range(3):
-                Kaarten[kaart_keuze[i]-1] = Pot.pop()
+                Kaarten[int(kaart_keuze[i])-1] = Pot.pop()
         kaart_keuze = []
                 
     scherm.blit(Afbeelding(Kaarten[0]), (10,10))
@@ -79,3 +84,4 @@ while True: # deze loop wordt gerund terwijl het spel gespeeld wordt, tot het sp
     scherm.blit(Afbeelding(Kaarten[11]), (340,430))
     
     pygame.display.update() # Updatet het scherm
+
