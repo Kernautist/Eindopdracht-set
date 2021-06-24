@@ -23,17 +23,48 @@ def Pad(invoer): # geeft het pad naar de afbeelding van de kaart
 def Afbeelding(invoer): # laadt de afbeelding van de kaart die wordt ingevoerd
     return pygame.image.load(Pad(invoer)).convert()
 
+text = ''
+font = pygame.font.Font(None, 32)
+input_box = pygame.Rect(100, 100, 140, 32)
+kleur = pygame.Color('lightskyblue3')
+kaart_keuze = []
 while True: # deze loop wordt gerund terwijl het spel gespeeld wordt, tot het spel wordt afgesloten
     for event in pygame.event.get(): # Registreert alle events, zoals muisklikken etc.
         if event.type == pygame.QUIT: # Als op het kruisje gedrukt wordt, dan moet het programma afsluiten
             pygame.quit()
             sys.exit()
-    
+        
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_RETURN:
+                print(text) # Hier wat toevoegen
+                kaart_keuze.append(text)
+                text = ''
+                scherm.fill(pygame.Color("black"), (input_box.x + 450, input_box.y + 5, 140, 32))
+            elif event.key == pygame.K_BACKSPACE:
+                text = text[:-1]
+                scherm.fill(pygame.Color("black"), (input_box.x + 450, input_box.y + 5, 140, 32))
+            else:
+                text += event.unicode
+    # Render the current text.
+    txt_surface = font.render(text, True, kleur)
+    # Resize the box if the text is too long.
+    width = max(200, txt_surface.get_width()+10)
+    input_box.w = width
+    # Blit the text.
+    scherm.blit(txt_surface, (input_box.x + 450, input_box.y + 5))
+    # Blit the input_box rect.
+    pygame.draw.rect(scherm, kleur, (input_box.x + 450, input_box.y + 5, input_box.w, input_box.height) , 2)
     '''Kaarten rooster ziet er als volgt uit:
     1 4 7 10
     2 5 8 11
     3 6 9 12
     '''
+    if len(kaart_keuze) == 3:
+        if set.IsSet(int(kaart_keuze[0]), int(kaart_keuze[1]), int(kaart_keuze[2])):
+            for i in range(3):
+                Kaarten[kaart_keuze[i]-1] = Pot.pop()
+        kaart_keuze = []
+                
     scherm.blit(Afbeelding(Kaarten[0]), (10,10))
     scherm.blit(Afbeelding(Kaarten[1]), (10,220))
     scherm.blit(Afbeelding(Kaarten[2]), (10,430))
