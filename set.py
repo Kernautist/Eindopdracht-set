@@ -1,8 +1,11 @@
+'''
+Deze module bevat alle algoritmen en klassen die we back-end gebruiken tijdens het runnen van het spel set.
+'''
+
 import random
 
 #In het programma zullen we de eigenschappen van de kaarten aangeven met 0, 1 of 2
 #In onderstaande dictionaries staat wat voor betekenis dit getal daadwerkelijk heeft
-
 LegendaKleur = {
 0 : 'green',
 1 : 'purple',
@@ -24,24 +27,29 @@ LegendaAantal = {
 2 : '3'}
 
 class Kaart:
+    '''
+    De klasse van kaarten in het spel set. 
+    Alle kaarten hebben een unieke combinatie van vier eigenschappen: 
+        - kleur
+        - figuur
+        - opvulling
+        - aantal.
+    '''
+    def __init__(self, invoer = [0,0,0,0]):
+        '''
+        Parameters
+        ----------
+        invoer : list
+            Elk van de elementen van deze lijst representeert een eigenschap van de kaart.
+            De standaardwaarde is [0,0,0,0].
+        '''
+        self.kleur, self.figuur, self.opvulling, self.aantal = invoer  # Hier worden alle eigenschappen daadwerkelijk toegekend aan het object self
     
-    def __init__(self, kleur=0, figuur=0, opvulling=0, aantal=0):
-        if type(kleur)==list:
-            self.kleur = kleur[0] #dit 'attatcht' de kleur daadwerkelijk aan het object self.
-            self.figuur = kleur[1]
-            self.opvulling = kleur[2]
-            self.aantal = kleur[3]
-        else:
-            self.kleur = kleur #dit 'attatcht' de kleur daadwerkelijk aan het object self.
-            self.figuur = figuur
-            self.opvulling = opvulling
-            self.aantal = aantal
-    
+    ''' even kijken of onderstaande functie wordt gebruikt in de code '''
     def lijst(self):
         return [self.kleur, self.figuur, self.opvulling, self.aantal]
     
     ''' Onderstaande functie kan wat mij betreft verwijderd worden na het programma af is, het heeft namelijk geen functie in het computerprogramma zelf.'''
-    
     def __str__(self): #zo kunnen we kaarten printen en dus de eigenschappen chekken.
         # Onderstaand geeft een string van de vorm 'Kleur = 1 = purple', waar 1 en purple eigenlijk hetzelfde zijn.
         stringkleur = 'Kleur = ' + str(self.kleur) + ' = ' + LegendaKleur[self.kleur]
@@ -87,8 +95,8 @@ def IsSet(kaart1, kaart2, kaart3): #algoritme dat voor 3 gegeven kaarten control
     #Als deze code bereikt wordt, betekent dat dat er geen foute set is aangetroffen. We returnen daarom True
     return True
 
-def VindSets(kaarten): #algoritme dat voor een willekeurig aantal kaarten alle mogelijke sets geeft.
-    sets = [] #de gevonden sets
+def VindSets(kaarten):  # Algoritme dat voor een willekeurig aantal kaarten alle mogelijke sets geeft.
+    sets = []
     for i in range(len(kaarten)-1):
         kaart1 = kaarten[i]
         for j in range(i + 1,len(kaarten)-1): #door kaarten met index 0 t/m i niet mee te rekenen, voorkomen we dat er dubbele sets gevonden worden. Ook zorgt dit ervoor dat kaarten geen set met zichzelf vormen.
@@ -99,26 +107,51 @@ def VindSets(kaarten): #algoritme dat voor een willekeurig aantal kaarten alle m
                     sets.append([kaart1, kaart2, kaart3]) #Voegt de drie kaarten toe aan de lijst met gevonden sets.
     return sets
 
-                    
+'''onderstaande functie wordt nergens gebruikt. verwijderen????'''
 def PrintVindSets(kaarten):
     if len(VindSets(kaarten)) == 0:
         print('Geen sets gevonden!')
     else:
         print(VindSets(kaarten)[0])
 
-def Pot(): #creëert een lijst met alle mogelijke kaarten
+def Pot():
+    '''
+    
+
+    Returns
+    -------
+    pot : list
+        Dit is de pot, de stapel (in ons geval lijst) met alle nog ongebruikte kaarten.
+
+    '''
     pot = []
-    for i in range(3):
+    for i in range(3):  # Hier staat elk van de 4 for-loops voor één van de eigenschappen van een kaart. Alle mogelijke combinaties van eigenschappen worden zo bijlangs gegaan.
         for j in range(3):
             for k in range(3):
                 for l in range(3):
-                    kaart = Kaart(i,j,k,l).lijst() #zorgt ervoor dat de kaart als lijst opgeslagen wordt.
-                    pot.append(kaart) #voegt de gevonden kaart toe aan de pot.
-    random.shuffle(pot) #Zorgt ervoor dat de pot in een willekeurige volgorde is.
+                    pot.append([i,j,k,l])  # Voegt de gevonden kaart toe aan de pot, maar dit is nog op een systematische volgorde.
+    random.shuffle(pot)  # Zorgt ervoor dat de pot in een willekeurige volgorde is.
     return pot
 
-def vervang_kaarten(kaarten, pot):      
+def vervang_kaarten(kaarten, pot):
+    '''
+    Parameters
+    ----------
+    kaarten : list
+        Dit is de lijst met alle kaarten die op tafel liggen.
+    pot : list
+        Dit is de lijst met alle nog ongebruikte kaarten, de pot.
+
+    Returns
+    -------
+    kaarten : list
+        De lijst met alle kaarten op tafel,
+        na het evt. vervangen van 3 kaarten.
+    pot : list
+        De lijst met alle kaarten in de pot na het vervangen van 3 kaarten.
+    '''
     if len(VindSets(kaarten)) == 0:
         for i in range(3):
             kaarten[i] = pot.pop()
     return kaarten, pot
+
