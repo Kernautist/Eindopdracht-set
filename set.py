@@ -89,23 +89,22 @@ def IsSet(kaart1, kaart2, kaart3): #algoritme dat voor 3 gegeven kaarten control
 
 def VindSets(kaarten): #algoritme dat voor een willekeurig aantal kaarten alle mogelijke sets geeft.
     sets = [] #de gevonden sets
-    sets_index = []
-    for i in range(len(kaarten)):
+    for i in range(len(kaarten)-1):
         kaart1 = kaarten[i]
-        for j in range(i + 1,len(kaarten)): #door kaarten met index 0 t/m i niet mee te rekenen, voorkomen we dat er dubbele sets gevonden worden. Ook zorgt dit ervoor dat kaarten geen set met zichzelf vormen.
+        for j in range(i + 1,len(kaarten)-1): #door kaarten met index 0 t/m i niet mee te rekenen, voorkomen we dat er dubbele sets gevonden worden. Ook zorgt dit ervoor dat kaarten geen set met zichzelf vormen.
             kaart2 = kaarten[j]
-            for k in range(j + 1,len(kaarten)): #door kaarten met index 0 t/m j niet mee te rekenen, voorkomen we dat er dubbele sets gevonden worden.
+            for k in range(j + 1,len(kaarten)-1): #door kaarten met index 0 t/m j niet mee te rekenen, voorkomen we dat er dubbele sets gevonden worden.
                 kaart3 = kaarten[k]
                 if IsSet(Kaart(kaart1),Kaart(kaart2),Kaart(kaart3)): #Als ze een set vormen, voeg ze dan toe aan de lijst met sets.
                     sets.append([kaart1, kaart2, kaart3]) #Voegt de drie kaarten toe aan de lijst met gevonden sets.
-                    sets_index.append([i + 1, j + 1, k + 1])  #Voegt de index van de drie kaarten toe aan een lijst.
-    return sets, sets_index
+    return sets
+
                     
 def PrintVindSets(kaarten):
-    if len(VindSets(kaarten)[0]) == 0:
+    if len(VindSets(kaarten)) == 0:
         print('Geen sets gevonden!')
     else:
-        print(VindSets(kaarten)[0][0])
+        print(VindSets(kaarten)[0])
 
 def Pot(): #creëert een lijst met alle mogelijke kaarten
     pot = []
@@ -119,9 +118,7 @@ def Pot(): #creëert een lijst met alle mogelijke kaarten
     return pot
 
 def vervang_kaarten(kaarten, pot):      
-    while len(VindSets(kaarten)[0]) == 0:
+    if len(VindSets(kaarten)) == 0:
         for i in range(3):
-            kaarten.pop(0)
-            kaarten.append(pot.pop())
-            print(kaarten)
+            kaarten[i] = pot.pop()
     return kaarten, pot
