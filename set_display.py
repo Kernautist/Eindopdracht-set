@@ -1,7 +1,9 @@
 import set
 import os # deze library is nodig om bestanden uit een andere map eenvoudig te kunnen openen
 import sys, pygame # importeert de libraries sys en pygame, welke nodig zijn voor het visualiseren
+import time
 pygame.init() # initialiseert alle pygame modules
+
 
 grootte = breedte, hoogte = 1400, 800
 scherm = pygame.display.set_mode(grootte) # Creëert het scherm, met ingestelde grootte
@@ -28,7 +30,10 @@ font = pygame.font.Font(None, 32)
 input_box = pygame.Rect(100, 100, 140, 32)
 kleur = pygame.Color('lightskyblue3')
 kaart_keuze = []
+start_ticks=pygame.time.get_ticks()
+t0 = time.time()
 while True: # deze loop wordt gerund terwijl het spel gespeeld wordt, tot het spel wordt afgesloten
+    t1 = time.time()
     for event in pygame.event.get(): # Registreert alle events, zoals muisklikken etc.
         if event.type == pygame.QUIT: # Als op het kruisje gedrukt wordt, dan moet het programma afsluiten
             pygame.quit()
@@ -67,8 +72,39 @@ while True: # deze loop wordt gerund terwijl het spel gespeeld wordt, tot het sp
         
         if set.IsSet(Kaart1, Kaart2, Kaart3):
             for i in range(3):
-                Kaarten[int(kaart_keuze[i])-1] = Pot.pop()
+                if len(Pot) != 0:
+                    Kaarten[int(kaart_keuze[i])-1] = Pot.pop()
+        t0 = time.time()
         kaart_keuze = []
+        
+    if t1 - t0 > 5 and len(Pot) > 3:
+        gevonden = set.VindSets(Kaarten)[0]
+        if len(gevonden) == 0:
+            set.vervang_kaarten(Kaarten, Pot)
+        while len(gevonden) != 3:
+            gevonden = gevonden[0]
+        else:
+            if len(gevonden[0]) == 4:
+                continue
+            else:
+                gevonden = gevonden[0]
+        lijst = []
+        for i in range(3):
+            if i == 0:
+                lijst += [set.Kaart(gevonden[0]).lijst()]
+            elif i == 1:
+                lijst += [set.Kaart(gevonden[1]).lijst()]
+            else:
+                lijst += [set.Kaart(gevonden[2]).lijst()]
+        i = 0
+        while i < 3 and len(Pot) != 0:
+            Kaarten[int(Kaarten.index(lijst[i]))-1] = Pot.pop()
+        t0 = time.time()
+        
+        
+            
+        
+        
                 
     scherm.blit(Afbeelding(Kaarten[0]), (10,10))
     scherm.blit(Afbeelding(Kaarten[1]), (10,220))
