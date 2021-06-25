@@ -105,12 +105,7 @@ while True: # deze loop wordt gerund terwijl het spel gespeeld wordt, tot het sp
                 Kaarten[int(Kaarten.index(lijst[i]))] = Pot.pop()
                 i += 1
         t0 = time.time()
-        
-          
-             
-        
-        
-                
+
     scherm.blit(Afbeelding(Kaarten[0]), (10,10))
     scherm.blit(Afbeelding(Kaarten[1]), (10,220))
     scherm.blit(Afbeelding(Kaarten[2]), (10,430))
@@ -125,5 +120,3 @@ while True: # deze loop wordt gerund terwijl het spel gespeeld wordt, tot het sp
     scherm.blit(Afbeelding(Kaarten[11]), (340,430))
     
     pygame.display.update() # Updatet het scherm
-
-
