@@ -97,11 +97,11 @@ def IsSet(kaart1, kaart2, kaart3): #algoritme dat voor 3 gegeven kaarten control
 
 def VindSets(kaarten):  # Algoritme dat voor een willekeurig aantal kaarten alle mogelijke sets geeft.
     sets = []
-    for i in range(len(kaarten)-1):
+    for i in range(len(kaarten)):
         kaart1 = kaarten[i]
-        for j in range(i + 1,len(kaarten)-1): #door kaarten met index 0 t/m i niet mee te rekenen, voorkomen we dat er dubbele sets gevonden worden. Ook zorgt dit ervoor dat kaarten geen set met zichzelf vormen.
+        for j in range(i + 1,len(kaarten)): #door kaarten met index 0 t/m i niet mee te rekenen, voorkomen we dat er dubbele sets gevonden worden. Ook zorgt dit ervoor dat kaarten geen set met zichzelf vormen.
             kaart2 = kaarten[j]
-            for k in range(j + 1,len(kaarten)-1): #door kaarten met index 0 t/m j niet mee te rekenen, voorkomen we dat er dubbele sets gevonden worden.
+            for k in range(j + 1,len(kaarten)): #door kaarten met index 0 t/m j niet mee te rekenen, voorkomen we dat er dubbele sets gevonden worden.
                 kaart3 = kaarten[k]
                 if IsSet(Kaart(kaart1),Kaart(kaart2),Kaart(kaart3)): #Als ze een set vormen, voeg ze dan toe aan de lijst met sets.
                     sets.append([kaart1, kaart2, kaart3]) #Voegt de drie kaarten toe aan de lijst met gevonden sets.
@@ -116,8 +116,6 @@ def PrintVindSets(kaarten):
 
 def Pot():
     '''
-    
-
     Returns
     -------
     pot : list
@@ -146,12 +144,11 @@ def vervang_kaarten(kaarten, pot):
     -------
     kaarten : list
         De lijst met alle kaarten op tafel,
-        na het evt. vervangen van 3 kaarten.
+        na het evt. vervangen van de eerste 3 kaarten.
     pot : list
-        De lijst met alle kaarten in de pot na het vervangen van 3 kaarten.
+        De lijst met alle kaarten in de pot na het vervangen van de eerste 3 kaarten.
     '''
     if len(VindSets(kaarten)) == 0:
         for i in range(3):
             kaarten[i] = pot.pop()
     return kaarten, pot
-
