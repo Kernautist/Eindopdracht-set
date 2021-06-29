@@ -1,5 +1,6 @@
 '''
-Deze module bevat alle algoritmen en klassen die we back-end gebruiken tijdens het runnen van het spel set.
+Dit bestand bevat alle algoritmen, functies en klassen die nodig zijn voor het functioneren van het spel set.
+Denk hierbij bijvoorbeeld aan een algoritme voor het checken of drie kaarten een set vormen.
 '''
 
 import random
@@ -37,11 +38,14 @@ class Kaart:
     '''
     def __init__(self, invoer = [0,0,0,0]):
         '''
+        Initialiseert een kaart. Deze functie wordt dus aangeroepen wanneer er
+        een nieuwe kaart gegenereerd wordt.
+        
         Parameters
         ----------
         invoer : list
-            Elk van de elementen van deze lijst representeert een eigenschap van de kaart.
-            De standaardwaarde is [0,0,0,0].
+            Elk van de elementen van deze lijst representeert een eigenschap
+            van de kaart. De standaardwaarde is [0,0,0,0].
         '''
         self.kleur, self.figuur, self.opvulling, self.aantal = invoer  # Hier worden alle eigenschappen daadwerkelijk toegekend aan het object self
     
@@ -61,15 +65,25 @@ class Kaart:
     
         return outputstring
     
-    def gifnaam(self): # Deze functie creëert de naam van het .gif bestand bijbehorend bij de kaart
+    def gifnaam(self):
+        '''
+        Creëert de naam van het gifbestand van de afbeelding die bij een kaart
+        hoort. Zo wordt '[0,0,0,0]' 'greendiamondempty1.gif'.
+
+        Returns
+        -------
+        gifnaam : string
+            De naam van het .gif bestand dat bij een kaart hoort.
+
+        '''
         kleur = LegendaKleur[self.kleur]
         figuur = LegendaFiguur[self.figuur]
         opvulling = LegendaOpvulling[self.opvulling]
         aantal = LegendaAantal[self.aantal]
         
-        output = kleur + figuur + opvulling + aantal + '.gif'
+        gifnaam = kleur + figuur + opvulling + aantal + '.gif'
         
-        return output
+        return gifnaam
     
 def IsSet(kaart1, kaart2, kaart3): #algoritme dat voor 3 gegeven kaarten controleert of ze een set vormen
     for eigenschap in ['kleur', 'figuur', 'opvulling', 'aantal']: # we gaan alle eigenschappen los bijlangs.
@@ -116,10 +130,13 @@ def PrintVindSets(kaarten):
 
 def Pot():
     '''
+    Creëert een lijst die de pot voor moet stellen.
+    
     Returns
     -------
     pot : list
-        Dit is de pot, de stapel (in ons geval lijst) met alle nog ongebruikte kaarten.
+        Dit is de pot, de stapel (in ons geval lijst) met alle nog ongebruikte
+        kaarten.
 
     '''
     pot = []
@@ -133,6 +150,8 @@ def Pot():
 
 def vervang_kaarten(kaarten, pot):
     '''
+    Haalt drie kaarten van tafel, en vervangt deze voor kaarten uit de pot.
+    
     Parameters
     ----------
     kaarten : list
@@ -147,8 +166,14 @@ def vervang_kaarten(kaarten, pot):
         na het evt. vervangen van de eerste 3 kaarten.
     pot : list
         De lijst met alle kaarten in de pot na het vervangen van de eerste 3 kaarten.
+    
     '''
     if len(VindSets(kaarten)) == 0:
         for i in range(3):
             kaarten[i] = pot.pop()
+    '''
+    zullen we hier nog een elif plaatsen voor als er wel sets te vinden zijn?
+    Dit bespaart ons werk in het document set_displaly.py zodat deze wat
+    overzichtelijker wordt.
+    '''
     return kaarten, pot
