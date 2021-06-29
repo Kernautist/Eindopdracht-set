@@ -1,26 +1,81 @@
-import set # importeert alle functies van het document set.py
-import sys, pygame # importeert de libraries sys en pygame, welke nodig zijn voor het visualiseren
-import time # deze library hebben we nodig om een timer bij te kunnen houden.
-pygame.init() # initialiseert alle pygame modules
+import set  # Importeert alle functies van het document set.py
+import sys, pygame  # Importeert de libraries sys en pygame, welke nodig zijn voor het visualiseren
+import time  # Deze library hebben we nodig om een timer bij te kunnen houden.
+pygame.init()  # Initialiseert alle pygame modules
 
-grootte = breedte, hoogte = 1400, 800 # hier stellen we de grootte van het scherm vast
-scherm = pygame.display.set_mode(grootte) # Creëert het scherm, met ingestelde grootte
-pygame.display.set_caption("Set") # Zorgt dat het venster 'Set' heet ipv 'pygame window'
+grootte = breedte, hoogte = 1400, 800  # Hier stellen we de grootte van het scherm vast
+scherm = pygame.display.set_mode(grootte)  # Creëert het scherm, met ingestelde grootte
+pygame.display.set_caption("Set")  # Zorgt dat het venster 'Set' heet ipv 'pygame window'
 
-scherm_rh = scherm.get_rect() # maakt een rechthoek (rh) van het scherm. Hierdoor kunnen we waarschijnlijk later makkelijker dingen afbeelden op het scherm, zonder de x en y coördinaat te moeten hardcoden
+scherm_rh = scherm.get_rect()  # Maakt een rechthoek (rh) van het scherm. Hierdoor kunnen we waarschijnlijk later makkelijker dingen afbeelden op het scherm, zonder de x en y coördinaat te moeten hardcoden
 '''is dit nodig?????? we gebruiken scherm_rh (nog) nergens'''
 
-Pot = set.Pot() # maakt een pot aan met alle mogelijke kaarten
-Kaarten = [] # dit zijn de kaarten die op tafel liggen, in onderstaande for-loop zorgen we dat er 12 kaarten komen te liggen die gelijk van de pot afgehaald worden.
+Pot = set.Pot()  # Maakt een lijst 'Pot' aan met alle mogelijke kaarten
+Kaarten = []  # Dit zijn de kaarten die op tafel liggen
 for i in range(12):
-    Kaarten.append(Pot.pop()) # Zoals je ziet, halen we 12 keer een kaart van de pot af en 'leggen we die op tafel', in de verzameling Kaarten.
+    Kaarten.append(Pot.pop()) # We halen 12 keer een kaart van de pot af en 'leggen die op tafel', in de verzameling Kaarten.
 
-def Kaartnaam(invoer): # creëert de naam van de afbeelding van een kaart
-    return set.Kaart(invoer).gifnaam() # bijvoorbeeld de invoer '[0,0,0,0]' geeft als uitvoer 'greendiamondempty1.gif'
-def Pad(invoer): # geeft het pad naar de afbeelding van de kaart
-    return 'kaarten\\' + Kaartnaam(invoer) # dit geeft voor de invoer '[0,0,0,0]' de uitvoer 'kaarten\greendiamondempty1.gif'. Als we dit nu proberen te openen, opent de computer eerst de map kaarten en daarna het document greendiamondempty1.gif
-def Afbeelding(invoer): # laadt de afbeelding van de kaart die wordt ingevoerd. Deze afbeelding wordt nog niet afgebeeld, maar slechts ingeladen.
-    return pygame.image.load(Pad(invoer)).convert() # wat .convert() dot is lastig uit te leggen, maar dit zorgt ervoor dat het laden van alle pixels sneller gaat.
+def Gifnaam(invoer):
+    '''
+    Genereert de bestandsnaam van de afbeelding van een kaart.
+    Zo geeft de invoer '[0,0,0,0]'  als uitvoer 'greendiamondempty1.gif'.
+
+    Parameters
+    ----------
+    invoer : list
+        Deze lijst heeft 4 variabelen en stelt een kaart voor.
+
+    Returns
+    -------
+    gifnaam : string
+        Dit is de naam van het .gif bestand dat bij de kaart 'invoer' hoort.
+    
+    '''
+    gifnaam = set.Kaart(invoer).gifnaam()
+    return gifnaam
+
+def Pad(invoer):
+    '''
+    Genereert het pad om bij een afbeelding van een kaart te komen.
+    Omdat dit programma in dezelfde map opgeslagen staat als de map 'kaarten',
+    voldoet  om bij de invoer '[0,0,0,0]' als uitvoer
+    'kaarten\greendiamondempty1.gif' te geven.
+
+    Parameters
+    ----------
+    invoer : list
+        Deze lijst van 4 variabelen stelt een kaart voor.
+
+    Returns
+    -------
+    Pad : string
+        Deze string stelt dus het pad voor dat je vanaf de locatie van dit
+        pythonbestand 'af moet leggen' om bij een .gif afbeelding van een
+        kaart te komen.
+
+    '''
+    Pad = 'kaarten\\' + Gifnaam(invoer)  # Hier is een dubbele backslash nodig, omdat een enkele backslash op een andere manier geïnterpreteerd wordt door python.
+    return Pad
+
+# laadt de afbeelding van de kaart die wordt ingevoerd. Deze afbeelding wordt nog niet afgebeeld, maar slechts ingeladen.
+def Afbeelding(invoer):
+    '''
+    Laadt de afbeelding in die bij een bepaalde kaart hoort.
+    Deze afbeelding wordt slechts ingeladen, nog niet op het scherm geplaatst.
+
+    Parameters
+    ----------
+    invoer : list
+        Deze lijst met 4 variabelen stelt een kaart voor.
+
+    Returns
+    -------
+    afbeelding : pygame.Surface
+        Dit is de afbeelding die hoort bij de kaart 'invoer'.
+
+    '''
+    afbeelding = pygame.image.load(Pad(invoer)).convert() # wat .convert() dot is lastig uit te leggen, maar dit zorgt ervoor dat het laden van alle pixels sneller gaat.
+    return afbeelding
 
 font = pygame.font.SysFont('Arial', 28)
 kleur = pygame.Color('white')
@@ -89,11 +144,6 @@ while begonnen: # deze loop wordt gerund terwijl het spel gespeeld wordt, tot he
                 set_invoer += event.unicode
     # Render the current text.
     set_invoer_surface = font.render(set_invoer, True, kleur)
-    
-    ''' box groter maken als tekst lang is mogen we van mij weghalen.
-    invoer wordt toch niet langer dan 2 cijfers, misschien kunnen we dit er nog in programmeren?
-    Ik vind dit iig een beetje onoverzichtelijk en vooral ook overbodig.
-    '''
     # Blit the text.
     scherm.blit(set_invoer_surface, (set_invoer_rh.x, set_invoer_rh.y))
     # Blit the input_box rect.
@@ -161,4 +211,4 @@ while begonnen: # deze loop wordt gerund terwijl het spel gespeeld wordt, tot he
     scherm.blit(Afbeelding(Kaarten[10]), (340,220))
     scherm.blit(Afbeelding(Kaarten[11]), (340,430))
     
-    pygame.display.update() # Updatet het scherm
+    pygame.display.update()  # Updatet het scherm. Alle afbeeldingen die op het scherm geplaatst zijn, worden hier daadwerkelijk pas afgebeeld.
