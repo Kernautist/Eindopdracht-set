@@ -50,20 +50,20 @@ class Kaart:
         self.kleur, self.figuur, self.opvulling, self.aantal = invoer  # Hier worden alle eigenschappen daadwerkelijk toegekend aan het object self
     
     ''' even kijken of onderstaande functie wordt gebruikt in de code '''
-    def lijst(self):
-        return [self.kleur, self.figuur, self.opvulling, self.aantal]
+    # def lijst(self):
+    #     return [self.kleur, self.figuur, self.opvulling, self.aantal]
     
     ''' Onderstaande functie kan wat mij betreft verwijderd worden na het programma af is, het heeft namelijk geen functie in het computerprogramma zelf.'''
-    def __str__(self): #zo kunnen we kaarten printen en dus de eigenschappen chekken.
-        # Onderstaand geeft een string van de vorm 'Kleur = 1 = purple', waar 1 en purple eigenlijk hetzelfde zijn.
-        stringkleur = 'Kleur = ' + str(self.kleur) + ' = ' + LegendaKleur[self.kleur]
-        stringfiguur = '\nFiguur = ' + str(self.figuur) + ' = ' + LegendaFiguur[self.figuur] #\n creëert nieuwe regel
-        stringopvulling = '\nOpvulling = ' + str(self.opvulling) + ' = ' + LegendaOpvulling[self.opvulling] #\n creëert nieuwe regel
-        stringaantal = '\nAantal = ' + str(self.aantal) + ' = ' + LegendaAantal[self.aantal] #\n creëert nieuwe regel
+    # def __str__(self): #zo kunnen we kaarten printen en dus de eigenschappen chekken.
+    #     # Onderstaand geeft een string van de vorm 'Kleur = 1 = purple', waar 1 en purple eigenlijk hetzelfde zijn.
+    #     stringkleur = 'Kleur = ' + str(self.kleur) + ' = ' + LegendaKleur[self.kleur]
+    #     stringfiguur = '\nFiguur = ' + str(self.figuur) + ' = ' + LegendaFiguur[self.figuur] #\n creëert nieuwe regel
+    #     stringopvulling = '\nOpvulling = ' + str(self.opvulling) + ' = ' + LegendaOpvulling[self.opvulling] #\n creëert nieuwe regel
+    #     stringaantal = '\nAantal = ' + str(self.aantal) + ' = ' + LegendaAantal[self.aantal] #\n creëert nieuwe regel
         
-        outputstring = stringkleur + stringfiguur + stringopvulling + stringaantal
+    #     outputstring = stringkleur + stringfiguur + stringopvulling + stringaantal
     
-        return outputstring
+    #     return outputstring
     
     def __eq__(self, other):
         '''
@@ -82,8 +82,8 @@ class Kaart:
             minstens één eigenschap niet gelijk is.
 
         '''
-        for eigenschap in ['kleur', 'figuur', 'opvulling', 'aantal']:
-            if getattr(self, eigenschap) == getattr(other, eigenschap):
+        for eigenschap in ['kleur', 'figuur', 'opvulling', 'aantal']:  # We gaan alle eigenschappen los bijlangs
+            if getattr(self, eigenschap) == getattr(other, eigenschap):  # Per eigenschap controleren we of de kaarten overeenkomen wat betreft die eingenschap
                 '''
                 Simpelweg 'self.eigenschap' werkt hierboven niet, aangezien 'eigenschap' geen attribute is van self.
                 Daarom moeten we de functie getattr() gebruiken, deze gebruikt wel de attribute kleur als eigenschap='kleur'
@@ -92,8 +92,7 @@ class Kaart:
             else:
                 return False  # Als de eigenschap niet overeenkomt, zijn de kaarten niet gelijk.
         return True  # Als deze code bereikt wordt, betekent dit dat alle eigenschappen overeenkomen en dus dat de kaarten gelijk zijn.
-        
-    
+
     def gifnaam(self):
         '''
         Creëert de naam van het gifbestand van de afbeelding die bij een kaart
@@ -113,6 +112,29 @@ class Kaart:
         gifnaam = kleur + figuur + opvulling + aantal + '.gif'
         
         return gifnaam
+    
+    def Pad(self):
+        '''
+        Genereert het pad om bij een afbeelding van een kaart te komen.
+        Omdat dit programma in dezelfde map opgeslagen staat als de map 'kaarten',
+        voldoet  om bij de invoer '[0,0,0,0]' als uitvoer
+        'kaarten\greendiamondempty1.gif' te geven.
+    
+        Parameters
+        ----------
+        invoer : list
+            Deze lijst van 4 variabelen stelt een kaart voor.
+    
+        Returns
+        -------
+        Pad : string
+            Deze string stelt dus het pad voor dat je vanaf de locatie van dit
+            pythonbestand 'af moet leggen' om bij een .gif afbeelding van een
+            kaart te komen.
+    
+        '''
+        Pad = 'kaarten\\' + self.gifnaam()  # Hier is een dubbele backslash nodig, omdat een enkele backslash op een andere manier geïnterpreteerd wordt door python.
+        return Pad
 
  #algoritme dat voor 3 gegeven kaarten controleert of ze een set vormen
 def IsSet(kaart1, kaart2, kaart3):
@@ -135,43 +157,44 @@ def IsSet(kaart1, kaart2, kaart3):
         dan is de bool False.
 
     '''
-    
     if kaart1 == kaart2 == kaart3:
         return False  # Een kaart kan natuurlijk geen set vormen met zichzelf
-    
-    for eigenschap in ['kleur', 'figuur', 'opvulling', 'aantal']: # we gaan alle eigenschappen los bijlangs.
-        #We willen nu per eigenschap checken dat ofwel alle kaarten gelijk zijn, ofwel allemaal verschillend
-        if getattr(kaart1, eigenschap) == getattr(kaart2, eigenschap): #dit is True als kaart 1 en 2 gelijke eigenschap hebben, maar False als ze andere eigenschap hebben.
-            #Als het True is, moet kaart 3 ook gelijke eigenschap hebben als kaart1 (en daarmee ook kaart2).
-            if getattr(kaart1, eigenschap) == getattr(kaart3, eigenschap):
-                #Als kaart3 ook dezelfde eigenschap heeft, dan levert deze eigenschap geen problemen op en kan het een set zijn, afhankelijk van de andere eigenschappen. We gaan dus door naar de volgende eigenschap
-                continue
+    else:
+        for eigenschap in ['kleur', 'figuur', 'opvulling', 'aantal']: # we gaan alle eigenschappen los bijlangs.
+            #We willen nu per eigenschap checken dat ofwel alle kaarten gelijk zijn, ofwel allemaal verschillend
+            if getattr(kaart1, eigenschap) == getattr(kaart2, eigenschap): #dit is True als kaart 1 en 2 gelijke eigenschap hebben, maar False als ze andere eigenschap hebben.
+                #Als het True is, moet kaart 3 ook gelijke eigenschap hebben als kaart1 (en daarmee ook kaart2).
+                if getattr(kaart1, eigenschap) == getattr(kaart3, eigenschap):
+                    #Als kaart3 ook dezelfde eigenschap heeft, dan levert deze eigenschap geen problemen op en kan het een set zijn, afhankelijk van de andere eigenschappen. We gaan dus door naar de volgende eigenschap
+                    continue
+                else:
+                    #Als kaart3 verschilt in deze eigenschap, kan het kaartentrio dus geen set zijn. We stoppen met checken en returnen False
+                    return False
             else:
-                #Als kaart3 verschilt in deze eigenschap, kan het kaartentrio dus geen set zijn. We stoppen met checken en returnen False
-                return False
-        else:
-            #Als 1is2 False is, moet kaart 3 verschillende eigenschap hebben van kaart1 én van kaart2.
-            if getattr(kaart1, eigenschap) != getattr(kaart3, eigenschap) and getattr(kaart2, eigenschap) != getattr(kaart3, eigenschap):
-                #In dit geval hebben dus alledrie de kaarten een verschillende eigenschap, wat betekent dat we door kunnen met het checken van de volgende eigenschap
-                continue
-            else:
-                #In dit geval heeft kaart3 gelijke eigenschap als kaart1 of kaart2, terwijl kaart1 en kaart2 verschillende eigenschap hebben.
-                #Het is dus geen set, en we returnen False.
-                return False        
-    #Als deze code bereikt wordt, betekent dat dat er geen foute set is aangetroffen. We returnen daarom True
-    return True
+                #Als kaart1 en kaart2 verschillen, moet ook kaart 3 verschillende eigenschap hebben van kaart1 én van kaart2.
+                if getattr(kaart1, eigenschap) != getattr(kaart3, eigenschap) and getattr(kaart2, eigenschap) != getattr(kaart3, eigenschap):
+                    #In dit geval hebben dus alledrie de kaarten een verschillende eigenschap, wat betekent dat we door kunnen met het checken van de volgende eigenschap
+                    continue
+                else:
+                    #In dit geval heeft kaart3 gelijke eigenschap als kaart1 of kaart2, terwijl kaart1 en kaart2 verschillende eigenschap hebben.
+                    #Het is dus geen set, en we returnen False.
+                    return False        
+        #Als deze code bereikt wordt, betekent dat dat er geen fout is aangetroffen. We returnen daarom True.
+        return True
 
 def VindSets(kaarten):
     '''
     Voor een gegeven verzameling kaarten, geeft deze functie alle mogelijke
-    sets die gemaakt kunnen worden.
+    sets die gemaakt kunnen worden. Dit doen we door alle mogelijke
+    combinaties van 3 kaarten bijlangs te gaan en dan met de functie IsSet te
+    kijken of ze een set vormen.
 
     Parameters
     ----------
     kaarten : list
         Deze lijst bevat, zoals de naam suggereert, kaarten (waar elke kaart
         als een lijst met 4 variabelen weergeven wordt). In de praktijk zullen
-        dit altijd de 12 kaarten die op tafel liggen.
+        dit altijd de 12 kaarten zijn die op tafel liggen.
 
     Returns
     -------
@@ -183,21 +206,23 @@ def VindSets(kaarten):
     '''
     sets = []
     for i in range(len(kaarten)):
-        kaart1 = kaarten[i]
-        for j in range(i + 1,len(kaarten)): #door kaarten met index 0 t/m i niet mee te rekenen, voorkomen we dat er dubbele sets gevonden worden. Ook zorgt dit ervoor dat kaarten geen set met zichzelf vormen.
-            kaart2 = kaarten[j]
-            for k in range(j + 1,len(kaarten)): #door kaarten met index 0 t/m j niet mee te rekenen, voorkomen we dat er dubbele sets gevonden worden.
-                kaart3 = kaarten[k]
-                if IsSet(Kaart(kaart1),Kaart(kaart2),Kaart(kaart3)): #Als ze een set vormen, voeg ze dan toe aan de lijst met sets.
-                    sets.append([kaart1, kaart2, kaart3]) #Voegt de drie kaarten toe aan de lijst met gevonden sets.
+        if kaarten[i] == 0:
+            continue
+        else:
+            kaart1 = kaarten[i]  # kaart1 is de eerste van de drie kaarten die we op een set controleren. 
+            for j in range(i + 1,len(kaarten)): #door kaarten met index 0 t/m i niet mee te rekenen, voorkomen we dat er dubbele sets gevonden worden. Ook zorgt dit ervoor dat kaarten geen set met zichzelf vormen.
+                if kaarten[j] == 0:
+                    continue
+                else:
+                    kaart2 = kaarten[j]
+                    for k in range(j + 1,len(kaarten)): #door kaarten met index 0 t/m j niet mee te rekenen, voorkomen we dat er dubbele sets gevonden worden.
+                        if kaarten[k] == 0:
+                            continue
+                        else:
+                            kaart3 = kaarten[k]
+                            if IsSet(Kaart(kaart1),Kaart(kaart2),Kaart(kaart3)):
+                                sets.append([kaart1, kaart2, kaart3]) # Als de drie kaarten een set vormen, worden ze toegevoegd aan de lijst met gevonden sets.
     return sets
-
-'''onderstaande functie wordt nergens gebruikt. verwijderen????'''
-def PrintVindSets(kaarten):
-    if len(VindSets(kaarten)) == 0:
-        print('Geen sets gevonden!')
-    else:
-        print(VindSets(kaarten)[0])
 
 def Pot():
     '''
@@ -239,12 +264,13 @@ def vervang_kaarten(kaarten, pot):
         De lijst met alle kaarten in de pot na het vervangen van de eerste 3 kaarten.
     
     '''
-    if len(VindSets(kaarten)) == 0:
+    if len(VindSets(kaarten)) == 0:  # Als er geen sets gemaakt kunnen worden.
         for i in range(3):
-            kaarten[i] = pot.pop()
-    '''
-    zullen we hier nog een elif plaatsen voor als er wel sets te vinden zijn?
-    Dit bespaart ons werk in het document set_displaly.py zodat deze wat
-    overzichtelijker wordt.
-    '''
+            kaarten[i] = pot.pop()  # Vervang 3 kaarten voor een kaart uit de pot.
+    else:  # Als er wel sets gevonden kunnen worden.
+        '''
+        zullen we hier nog een elif plaatsen voor als er wel sets te vinden zijn?
+        Dit bespaart ons werk in het document set_displaly.py zodat deze wat
+        overzichtelijker wordt.
+        '''
     return kaarten, pot
