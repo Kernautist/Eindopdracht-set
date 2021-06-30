@@ -65,6 +65,35 @@ class Kaart:
     
         return outputstring
     
+    def __eq__(self, other):
+        '''
+        Checkt of twee kaarten gelijk zijn aan elkaar
+
+        Parameters
+        ----------
+        self : Kaart
+        
+        other : Kaart
+
+        Returns
+        -------
+        bool
+            True als alle eigenschappen hetzelfde zijn, maar False als er
+            minstens één eigenschap niet gelijk is.
+
+        '''
+        for eigenschap in ['kleur', 'figuur', 'opvulling', 'aantal']:
+            if getattr(self, eigenschap) == getattr(other, eigenschap):
+                '''
+                Simpelweg 'self.eigenschap' werkt hierboven niet, aangezien 'eigenschap' geen attribute is van self.
+                Daarom moeten we de functie getattr() gebruiken, deze gebruikt wel de attribute kleur als eigenschap='kleur'
+                '''
+                continue  # Als de eigenschap overeenkomt, gaan we door met het checken van de volgende eigenschap.
+            else:
+                return False  # Als de eigenschap niet overeenkomt, zijn de kaarten niet gelijk.
+        return True  # Als deze code bereikt wordt, betekent dit dat alle eigenschappen overeenkomen en dus dat de kaarten gelijk zijn.
+        
+    
     def gifnaam(self):
         '''
         Creëert de naam van het gifbestand van de afbeelding die bij een kaart
@@ -84,11 +113,34 @@ class Kaart:
         gifnaam = kleur + figuur + opvulling + aantal + '.gif'
         
         return gifnaam
+
+ #algoritme dat voor 3 gegeven kaarten controleert of ze een set vormen
+def IsSet(kaart1, kaart2, kaart3):
+    '''
+    Deze functie controleert of drie gegeven kaarten samen een set vormen.
+
+    Parameters
+    ----------
+    kaart1 : Kaart
+        Dit is de eerste van de drie kaarten.
+    kaart2 : Kaart
+        Dit is de tweede van de drie kaarten.
+    kaart3 : Kaart
+        Dit is de derde en laatste kaart.
+
+    Returns
+    -------
+    bool
+        Als de drie kaarten een set vormen, dan is deze bool True. Zo niet,
+        dan is de bool False.
+
+    '''
     
-def IsSet(kaart1, kaart2, kaart3): #algoritme dat voor 3 gegeven kaarten controleert of ze een set vormen
+    if kaart1 == kaart2 == kaart3:
+        return False  # Een kaart kan natuurlijk geen set vormen met zichzelf
+    
     for eigenschap in ['kleur', 'figuur', 'opvulling', 'aantal']: # we gaan alle eigenschappen los bijlangs.
-        #We willen nu per eigenschap checken dat ofwel alle kaarten gelijk zijn, ofwel allemaal verschillend       
-        #Dit checken we in onderstaand if-statement:
+        #We willen nu per eigenschap checken dat ofwel alle kaarten gelijk zijn, ofwel allemaal verschillend
         if getattr(kaart1, eigenschap) == getattr(kaart2, eigenschap): #dit is True als kaart 1 en 2 gelijke eigenschap hebben, maar False als ze andere eigenschap hebben.
             #Als het True is, moet kaart 3 ook gelijke eigenschap hebben als kaart1 (en daarmee ook kaart2).
             if getattr(kaart1, eigenschap) == getattr(kaart3, eigenschap):
@@ -109,7 +161,26 @@ def IsSet(kaart1, kaart2, kaart3): #algoritme dat voor 3 gegeven kaarten control
     #Als deze code bereikt wordt, betekent dat dat er geen foute set is aangetroffen. We returnen daarom True
     return True
 
-def VindSets(kaarten):  # Algoritme dat voor een willekeurig aantal kaarten alle mogelijke sets geeft.
+def VindSets(kaarten):
+    '''
+    Voor een gegeven verzameling kaarten, geeft deze functie alle mogelijke
+    sets die gemaakt kunnen worden.
+
+    Parameters
+    ----------
+    kaarten : list
+        Deze lijst bevat, zoals de naam suggereert, kaarten (waar elke kaart
+        als een lijst met 4 variabelen weergeven wordt). In de praktijk zullen
+        dit altijd de 12 kaarten die op tafel liggen.
+
+    Returns
+    -------
+    sets : list
+        Deze lijst bevat alle mogelijke sets die gemaakt kan worden met de
+        gespecificeerde kaarten. Hier is een set weergeven als een lijst met
+        daarin weer drie lijsten die ieder een kaart voorstellen.
+
+    '''
     sets = []
     for i in range(len(kaarten)):
         kaart1 = kaarten[i]
