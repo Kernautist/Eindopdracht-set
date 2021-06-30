@@ -136,7 +136,6 @@ class Kaart:
         Pad = 'kaarten\\' + self.gifnaam()  # Hier is een dubbele backslash nodig, omdat een enkele backslash op een andere manier geïnterpreteerd wordt door python.
         return Pad
 
- #algoritme dat voor 3 gegeven kaarten controleert of ze een set vormen
 def IsSet(kaart1, kaart2, kaart3):
     '''
     Deze functie controleert of drie gegeven kaarten samen een set vormen.
