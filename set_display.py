@@ -13,7 +13,7 @@ scherm_rh = scherm.get_rect()  # Maakt een rechthoek (rh) van het scherm. Hierdo
 Pot = set.Pot()  # Maakt een lijst 'Pot' aan met alle mogelijke kaarten
 Kaarten = []  # Dit zijn de kaarten die op tafel liggen
 for i in range(12):
-    Kaarten.append(Pot.pop()) # We halen 12 keer een kaart van de pot af en 'leggen die op tafel', in de verzameling Kaarten.
+    Kaarten.append(Pot.pop())  # We halen 12 keer een kaart van de pot af en 'leggen die op tafel', in de verzameling Kaarten.
 
 def Gifnaam(invoer):
     '''
@@ -78,15 +78,29 @@ def Afbeelding(invoer):
     return afbeelding
 
 font = pygame.font.SysFont('Arial', 28)
-kleur = pygame.Color('white')
+wit = pygame.Color('white')
+zwart = pygame.Color('black')
 kaart_keuze = []
 t0 = time.time()
 begonnen = False
 tijd_invoer = ''
 tijd_invoer_rh = pygame.Rect(630, 400, 40, 32)
-tijd_opvraag = font.render('Hoeveel tijd wil je jezelf geven om een set te vinden? Voer een waarde in tussen 1 en 99 seconden.', True, kleur)
+tijd_opvraag = font.render('Hoeveel tijd wil je jezelf geven om een set te vinden? Voer een waarde in tussen 1 en 99 seconden.', True, wit)
 set_invoer = ''
 set_invoer_rh = pygame.Rect(10, 700, 140, 32)
+
+nummer1 = font.render('1', True, zwart)
+nummer2 = font.render('2', True, zwart)
+nummer3 = font.render('3', True, zwart)
+nummer4 = font.render('4', True, zwart)
+nummer5 = font.render('5', True, zwart)
+nummer6 = font.render('6', True, zwart)
+nummer7 = font.render('7', True, zwart)
+nummer8 = font.render('8', True, zwart)
+nummer9 = font.render('9', True, zwart)
+nummer10 = font.render('10', True, zwart)
+nummer11 = font.render('11', True, zwart)
+nummer12 = font.render('12', True, zwart)
 
 while not begonnen:
     for event in pygame.event.get():
@@ -99,28 +113,32 @@ while not begonnen:
                 tijd_invoer = ''
                 begonnen = True
             elif event.key == pygame.K_BACKSPACE and len(tijd_invoer) > 0:
-                scherm.fill(pygame.Color('black'), tijd_invoer_rh)
+                scherm.fill(zwart, tijd_invoer_rh)
                 tijd_invoer = tijd_invoer[:-1]
             elif event.unicode in ['0','1','2','3','4','5','6','7','8','9'] and len(tijd_invoer) < 2:
                 tijd_invoer += event.unicode
     
     scherm.blit(tijd_opvraag, (190,340))
     
-    tijd_invoer_surface = font.render(tijd_invoer, True, kleur)
+    tijd_invoer_surface = font.render(tijd_invoer, True, wit)
     scherm.blit(tijd_invoer_surface, (tijd_invoer_rh.x + 6, tijd_invoer_rh.y , tijd_invoer_rh.width - 12, tijd_invoer_rh.height - 12))
     
-    pygame.draw.rect(scherm, kleur, tijd_invoer_rh , 2)
+    pygame.draw.rect(scherm, wit, tijd_invoer_rh , 2)
     
     pygame.display.update()
 
-scherm.fill(pygame.Color('black'))  # Hele scherm wordt gereset
+scherm.fill(zwart)  # Hele scherm wordt gereset
 
 while begonnen: # deze loop wordt gerund terwijl het spel gespeeld wordt, tot het spel wordt afgesloten
     t1 = time.time()
+    
+    '''onderstaande moet weg'''
     if len(Pot) == 0:
         Pot = set.Pot()
         for kaart in Kaarten:
             Pot.remove(kaart)
+    
+    
     for event in pygame.event.get(): # Registreert alle events, zoals muisklikken etc.
         if event.type == pygame.QUIT: # Als op het kruisje gedrukt wordt, dan moet het programma afsluiten
             pygame.quit()
@@ -131,31 +149,31 @@ while begonnen: # deze loop wordt gerund terwijl het spel gespeeld wordt, tot he
                 if set_invoer == 'VindSets':
                     '''cheatcode weghalen wanneer we klaar zijn??'''
                     print(set.VindSets(Kaarten))
-                else:
+                elif set_invoer in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']:
                     kaart_keuze.append(set_invoer)
                 set_invoer = ''
-                scherm.fill(pygame.Color("black"), (set_invoer_rh.x, set_invoer_rh.y, 140, 32))
+                scherm.fill(zwart, (set_invoer_rh.x, set_invoer_rh.y, 140, 32))
             elif event.key == pygame.K_BACKSPACE and len(set_invoer) > 0:
                 set_invoer = set_invoer[:-1]
-                scherm.fill(pygame.Color("black"), (set_invoer_rh.x, set_invoer_rh.y, 140, 32))
-            elif len(set_invoer) < 8:
+                scherm.fill(zwart, (set_invoer_rh.x, set_invoer_rh.y, 140, 32))
+            elif len(set_invoer) < 8 and (event.unicode in 'VindSets' or event.unicode in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']):
                 '''bovenstaande 8 kan een 2 worden als de cheatcode weggehaald wordt.
                 Ook kan je hier in zetten dat de event.unicode een cijfer moet zijn'''
                 set_invoer += event.unicode
     # Render the current text.
-    set_invoer_surface = font.render(set_invoer, True, kleur)
+    set_invoer_surface = font.render(set_invoer, True, wit)
     # Blit the text.
     scherm.blit(set_invoer_surface, (set_invoer_rh.x, set_invoer_rh.y))
     # Blit the input_box rect.
-    pygame.draw.rect(scherm, kleur, (set_invoer_rh.x, set_invoer_rh.y, set_invoer_rh.width, set_invoer_rh.height) , 2)
+    pygame.draw.rect(scherm, wit, (set_invoer_rh.x, set_invoer_rh.y, set_invoer_rh.width, set_invoer_rh.height) , 2)
     
     if len(kaart_keuze) == 0:  # Beeldt de opvraag van de set af
-        set_opvraag_surface = font.render('Voer het kaartnummer in van de eerste kaart van je gevonden set:', True, kleur)
+        set_opvraag_surface = font.render('Voer het kaartnummer in van de eerste kaart van je gevonden set:', True, wit)
     elif len(kaart_keuze) == 1:
-        set_opvraag_surface = font.render('Voer het kaartnummer in van de tweede kaart van je gevonden set:', True, kleur)
+        set_opvraag_surface = font.render('Voer het kaartnummer in van de tweede kaart van je gevonden set:', True, wit)
     else:
-        set_opvraag_surface = font.render('Voer het kaartnummer in van de derde kaart van je gevonden set:', True, kleur)
-    scherm.fill(pygame.Color("black"), (10, 650, 690, 35))
+        set_opvraag_surface = font.render('Voer het kaartnummer in van de derde kaart van je gevonden set:', True, wit)
+    scherm.fill(zwart, (10, 650, 690, 35))
     scherm.blit(set_opvraag_surface, (10, 650))
     
     if len(kaart_keuze) == 0:
@@ -164,8 +182,8 @@ while begonnen: # deze loop wordt gerund terwijl het spel gespeeld wordt, tot he
         kaart_keuze_string = 'Ingevoerde kaarten: ' + kaart_keuze[0]
     elif len(kaart_keuze) == 2:
         kaart_keuze_string = 'Ingevoerde kaarten: ' + kaart_keuze[0] + ', ' + kaart_keuze[1]
-    kaart_keuze_surface = font.render(kaart_keuze_string, True, kleur)
-    scherm.fill(pygame.Color("black"), (10, 740, 280, 35))
+    kaart_keuze_surface = font.render(kaart_keuze_string, True, wit)
+    scherm.fill(zwart, (10, 740, 280, 35))
     scherm.blit(kaart_keuze_surface, (10, 740))
     
     if len(kaart_keuze) == 3:  # Checkt of de ingevoerde kaarten een set zijn
@@ -199,16 +217,28 @@ while begonnen: # deze loop wordt gerund terwijl het spel gespeeld wordt, tot he
     3 6 9 12
     '''         
     scherm.blit(Afbeelding(Kaarten[0]), (10,10))
+    scherm.blit(nummer1, (12,12))
     scherm.blit(Afbeelding(Kaarten[1]), (10,220))
+    scherm.blit(nummer2, (12,222))
     scherm.blit(Afbeelding(Kaarten[2]), (10,430))
+    scherm.blit(nummer3, (12,432))
     scherm.blit(Afbeelding(Kaarten[3]), (120,10))
+    scherm.blit(nummer4, (122,12))
     scherm.blit(Afbeelding(Kaarten[4]), (120,220))
+    scherm.blit(nummer5, (122,222))
     scherm.blit(Afbeelding(Kaarten[5]), (120,430))
+    scherm.blit(nummer6, (122,432))
     scherm.blit(Afbeelding(Kaarten[6]), (230,10))
+    scherm.blit(nummer7, (232,12))
     scherm.blit(Afbeelding(Kaarten[7]), (230,220))
+    scherm.blit(nummer8, (232,222))
     scherm.blit(Afbeelding(Kaarten[8]), (230,430))
+    scherm.blit(nummer9, (232,432))
     scherm.blit(Afbeelding(Kaarten[9]), (340,10))
+    scherm.blit(nummer10, (342,12))
     scherm.blit(Afbeelding(Kaarten[10]), (340,220))
+    scherm.blit(nummer11, (342,222))
     scherm.blit(Afbeelding(Kaarten[11]), (340,430))
+    scherm.blit(nummer12, (342,432))
     
     pygame.display.update()  # Updatet het scherm. Alle afbeeldingen die op het scherm geplaatst zijn, worden hier daadwerkelijk pas afgebeeld.
