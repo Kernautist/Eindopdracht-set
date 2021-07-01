@@ -51,7 +51,7 @@ def Afbeelding(invoer):
 definiëren we eerst een aantal variabelen die niet veranderen. Het heeft
 immers geen zin om deze talloze keren per seconde opnieuw te definiëren.'''
 
-grootte = breedte, hoogte = 1400, 800  # Hier stellen we de grootte van het scherm vast.
+grootte = breedte, hoogte = 1200, 640  # Hier stellen we de grootte van het scherm vast.
 scherm = pygame.display.set_mode(grootte)  # Creëert het scherm, met ingestelde grootte
 pygame.display.set_caption("Set")  # Zorgt dat het venster 'Set' heet ipv 'pygame window'
 
@@ -66,13 +66,14 @@ zwart = pygame.Color('black')
 kaart_keuze = []  # Dit is de lijst met kaarten die de speler heeft ingevoerd.
 begonnen = False  # Wordt true zodra het spel echt begonnen is.
 tijd_invoer = ''  # Hierin voert de gebruiker in hoeveel tijd hij zichzelf geeft.
-tijd_invoer_rh = pygame.Rect(630, 400, 40, 32)  # Rechthoek waarin de tijd ingevoerd wordt.
+tijd_invoer_rh = pygame.Rect(580, 400, 40, 32)  # Rechthoek waarin de tijd ingevoerd wordt.
 tijd_opvraag = Arial28.render('Hoeveel tijd wil je jezelf geven om een set te vinden? Voer een waarde in tussen 1 en 99 seconden.', True, wit)  # In deze variabele is de afbeelding van deze tekst opgeslagen, maar nog niet afgebeeld.
 set_invoer = ''  # Hierin voert de gebruiker de kaartnummers van een set in.
-set_invoer_rh = pygame.Rect(10, 700, 140, 32)  # Rechthoek waarin de kaarten van een set ingevoerd worden.
+set_invoer_rh = pygame.Rect(450, 568, 140, 32)  # Rechthoek waarin de kaarten van een set ingevoerd worden.
 score_speler = 0
 score_computer = 0
-
+geen_set = 0
+# score = Arial28.render('Score:', True, wit)
 
 nummer1 = Arial28.render('1', True, zwart)  # Creëert een afbeelding met een zwarte 1, welke later pas afgebeeld wordt.
 nummer2 = Arial28.render('2', True, zwart)
@@ -90,6 +91,7 @@ nummer12 = Arial28.render('12', True, zwart)
 while not begonnen:
     '''Deze while-loop herhaalt zichzelf totdat het programma afgesloten wordt,
     of tot er een geldige waarde ingevoerd wordt.'''
+    scherm.fill(zwart)
     for event in pygame.event.get():
         '''In deze for-loop wordt voor alle events die pygame registreert,
         gecheckt of het een event is die voor ons van belang is. Zo ja, dan
@@ -103,17 +105,17 @@ while not begonnen:
                 tijd_invoer = ''
                 begonnen = True
             elif event.key == pygame.K_BACKSPACE and len(tijd_invoer) > 0:  # Backspace doet pas iets als er iets ingevoerd is.
-                scherm.fill(zwart, tijd_invoer_rh)  # Verwijdert de oude invoer van het scherm
                 tijd_invoer = tijd_invoer[:-1]  # Zorgt dat de nieuwe invoer een karakter korter is dan de oude.
             elif event.unicode in ['0','1','2','3','4','5','6','7','8','9'] and len(tijd_invoer) < 2:
                 '''Bovenstaand elif-statement checkt of de toets die ingedrukt wordt een cijfer is,
                 en of de invoer kleiner dan 2 karakters is. Zo zorgen we dat de invoer altijd bestaat uit maximaal 2 cijfers.'''
                 tijd_invoer += event.unicode
 
-    scherm.blit(tijd_opvraag, (190,340))  # Beeldt de tekst af op het scherm.
+    scherm.blit(tijd_opvraag, (100,240))  # Beeldt de tekst af op het scherm.
     
     tijd_invoer_surface = Arial28.render(tijd_invoer, True, wit)  # Creëert een afbeelding met de ingevoerde tijd.
     scherm.blit(tijd_invoer_surface, (tijd_invoer_rh.x + 6, tijd_invoer_rh.y - 1))  # Beeldt de ingevoerde tijd af op het scherm.
+    
     
     pygame.draw.rect(scherm, wit, tijd_invoer_rh , 2)  # Tekent een  rechthoek om de invoer-box.
     
@@ -124,6 +126,7 @@ t0 = time.time()  # Nodig voor de timer. t0 is het tijdstip op dit moment.
 
 while begonnen: # Deze loop wordt gerund terwijl het spel gespeeld wordt, tot het spel wordt afgesloten
     '''Deze while-loop herhaalt zich tot het programma afgesloten wordt.'''
+    scherm.fill(zwart)
     for event in pygame.event.get():
         '''In deze for-loop wordt voor alle events die pygame registreert,
         gecheckt of het een event is die voor ons van belang is. Zo ja, dan
@@ -136,9 +139,7 @@ while begonnen: # Deze loop wordt gerund terwijl het spel gespeeld wordt, tot he
                 if set_invoer in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']:  # Checkt of de invoer een geldig kaartnummer is.
                     kaart_keuze.append(set_invoer)  # Registreert de invoer als keuze.
                 set_invoer = ''
-                scherm.fill(zwart, (set_invoer_rh.x, set_invoer_rh.y, 140, 32))  # Haalt de oude invoer van het scherm.
             elif event.key == pygame.K_BACKSPACE and len(set_invoer) > 0:  # Als er nog niets is ingevoerd, doet backspace niets.
-                scherm.fill(zwart, (set_invoer_rh.x, set_invoer_rh.y, 140, 32))  # Haalt de oude invoer van het scherm.
                 set_invoer = set_invoer[:-1]  # Verwijdert laatste element van de invoer.
             elif event.unicode in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'] and len(set_invoer)<2:
                 '''Bovenstaand elif-statement checkt of de toets die ingedrukt wordt een cijfer is,
@@ -152,8 +153,7 @@ while begonnen: # Deze loop wordt gerund terwijl het spel gespeeld wordt, tot he
         set_opvraag_surface = Arial28.render('Voer het kaartnummer in van de tweede kaart van je gevonden set:', True, wit)
     else:  # Er waren al twee kaarten ingevoerd.
         set_opvraag_surface = Arial28.render('Voer het kaartnummer in van de derde kaart van je gevonden set:', True, wit)
-    scherm.fill(zwart, (10, 650, 690, 35))  # Reset het gebied waar de tekst afgebeeld moet worden.
-    scherm.blit(set_opvraag_surface, (10, 650))  # Beeldt de tekst af op het scherm.
+    scherm.blit(set_opvraag_surface, (450, 534))  # Beeldt de tekst af op het scherm.
     
     '''Het onderstaande beeldt de invoer-box af waar de gebruiker de kaartnummers invoert.'''
     set_invoer_surface = Arial28.render(set_invoer, True, wit)  # Maakt een afbeelding van het ingevoerde kaartnummer.
@@ -168,8 +168,7 @@ while begonnen: # Deze loop wordt gerund terwijl het spel gespeeld wordt, tot he
     elif len(kaart_keuze) == 2:  # Er ware nal twee kaarten ingevoerd.
         kaart_keuze_string = 'Ingevoerde kaarten: ' + kaart_keuze[0] + ', ' + kaart_keuze[1]
     kaart_keuze_surface = Arial28.render(kaart_keuze_string, True, wit)  # Maakt een afbeelding van de tekst
-    scherm.fill(zwart, (10, 740, 280, 35))  # Reset het gebied waar de tekst moet komen.
-    scherm.blit(kaart_keuze_surface, (10, 740))  # Beeldt de tekst af op het scherm.
+    scherm.blit(kaart_keuze_surface, (450, 598))  # Beeldt de tekst af op het scherm.
     
     '''In het onderstaande checkt de computer of de ingevoerde kaarten door de
     gebruiker een set zijn. Indien dit niet zo is, gebeurt er niets. Indien 
@@ -196,8 +195,9 @@ while begonnen: # Deze loop wordt gerund terwijl het spel gespeeld wordt, tot he
     in set.py de functie vervang_kaarten uitbreiden, zodat ook als er wel een set is de kaarten vervangen worden. Dat maakt deze functie in set_display leesbaarder.
     '''
     t1 = time.time()  # Slaat de huidige tijd op.
-    if t1 - t0 > tijd:  
+    if t1 - t0 > tijd:
         if len(set.VindSets(Kaarten)) != 0:  # Wanneer er een set op tafel ligt
+            score_computer += 1
             GevondenSet = set.VindSets(Kaarten)[0]
             for i in range(3):
                 if len(Pot) != 0:
@@ -205,7 +205,7 @@ while begonnen: # Deze loop wordt gerund terwijl het spel gespeeld wordt, tot he
                 else:
                     Kaarten[int(Kaarten.index(GevondenSet[i]))] = 0
         else:  # Wanneer er geen sets op tafel liggen
-            GevondenSet = []
+            geen_set += 1
             set.vervang_kaarten(Kaarten, Pot)
         t0 = time.time()
     
@@ -214,8 +214,21 @@ while begonnen: # Deze loop wordt gerund terwijl het spel gespeeld wordt, tot he
         begonnen = False
     
     '''SCORE WEERGEVEN'''
+    # scherm.blit(score, (800, 10))
+    score_speler_surface = Arial28.render('Score speler: ' + str(score_speler), True, wit)
+    score_computer_surface = Arial28.render('Score computer: ' + str(score_computer), True, wit)
+    geen_set_surface = Arial28.render('Aantal keer geen set: ' + str(geen_set), True, wit)
+    scherm.blit(score_speler_surface, (900, 10))
+    scherm.blit(score_computer_surface, (900,42))
+    scherm.blit(geen_set_surface, (900,74))
     
     '''TIMER WEERGEVEN'''
+    tijd_surface = Arial28.render('Tijd over: ' + str(round(tijd-(t1-t0), 1)), True, wit)
+    scherm.blit(tijd_surface, (500,42))
+    
+    '''POT WEERGEVEN'''
+    pot_surface = Arial28.render('Kaarten in pot: ' + str(len(Pot)), True, wit)
+    scherm.blit(pot_surface, (500,10))
     
     '''Kaarten rooster ziet er als volgt uit:
     1 4 7 10
@@ -262,5 +275,3 @@ while True:
     
     '''AFGELOPEN WEERGEVEN
     linksonderin, ipv invoer etc.'''
-    
-    '''TIMER OP 0 ZETTEN???'''
