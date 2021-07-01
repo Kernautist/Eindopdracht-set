@@ -142,6 +142,9 @@ while begonnen: # Deze loop wordt gerund terwijl het spel gespeeld wordt, tot he
                 set_invoer = ''
             elif event.key == pygame.K_BACKSPACE and len(set_invoer) > 0:  # Als er nog niets is ingevoerd, doet backspace niets.
                 set_invoer = set_invoer[:-1]  # Verwijdert laatste element van de invoer.
+            elif event.key == pygame.K_ESCAPE:  # Escape reset alle ingevoerde kaarten.
+                set_invoer = ''
+                kaart_keuze = []
             elif event.unicode in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'] and len(set_invoer)<2:
                 '''Bovenstaand elif-statement checkt of de toets die ingedrukt wordt een cijfer is,
                 en of de invoer kleiner dan 2 karakters is. Zo zorgen we dat de invoer altijd bestaat uit maximaal 2 cijfers.'''
