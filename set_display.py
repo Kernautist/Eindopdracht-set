@@ -62,19 +62,19 @@ for i in range(12):
 
 Arial24 = pygame.font.Font('Arial.ttf', 24)
 Arial40 = pygame.font.Font('Arial.ttf', 40)
+Arial60 = pygame.font.Font('Arial.ttf', 60)
 wit = pygame.Color('white')
 zwart = pygame.Color('black')
 kaart_keuze = []  # Dit is de lijst met kaarten die de speler heeft ingevoerd.
 begonnen = False  # Wordt true zodra het spel echt begonnen is.
 tijd_invoer = ''  # Hierin voert de gebruiker in hoeveel tijd hij zichzelf geeft.
-tijd_invoer_rh = pygame.Rect(580, 400, 40, 32)  # Rechthoek waarin de tijd ingevoerd wordt.
+tijd_invoer_rh = pygame.Rect(580, 300, 40, 32)  # Rechthoek waarin de tijd ingevoerd wordt.
 tijd_opvraag = Arial24.render('Hoeveel tijd wil je jezelf geven om een set te vinden? Voer een waarde in tussen 1 en 99 seconden.', True, wit)  # In deze variabele is de afbeelding van deze tekst opgeslagen, maar nog niet afgebeeld.
 set_invoer = ''  # Hierin voert de gebruiker de kaartnummers van een set in.
 set_invoer_rh = pygame.Rect(450, 568, 140, 32)  # Rechthoek waarin de kaarten van een set ingevoerd worden.
 score_speler = 0
 score_computer = 0
 geen_set = 0
-Afgelopen = Arial40.render('Afgelopen!!!', True, wit)
 
 nummer1 = Arial24.render('1', True, zwart)  # Creëert een afbeelding met een zwarte 1, welke later pas afgebeeld wordt.
 nummer2 = Arial24.render('2', True, zwart)
@@ -260,7 +260,14 @@ while begonnen: # Deze loop wordt gerund terwijl het spel gespeeld wordt, tot he
     pygame.display.update()  # Updatet het scherm. Alle afbeeldingen die op het scherm geplaatst zijn, worden hier daadwerkelijk pas afgebeeld.
 
 '''INVOER OPVRAAG, INVOER BOX, INGEVOERDE KAARTEN RESETTEN'''
+scherm.fill(zwart, (450, 534, 700, 106))
 
+if score_speler > score_computer:
+    Afgelopen = Arial60.render('Je hebt gewonnen! :D', True, wit)
+elif score_speler < score_computer:
+    Afgelopen = Arial60.render("Je hebt verloren! :'(", True, wit)
+else:
+    Afgelopen = Arial60.render('Je hebt gelijk gespeeld!', True, wit)
 
 while True:
     for event in pygame.event.get():
@@ -272,7 +279,7 @@ while True:
             sys.exit()
     
     '''AFGELOPEN WEERGEVEN'''
-    
-    scherm.blit(Afgelopen, (500, 400))
+    scherm.fill(zwart, (500, 290, 650, 100))
+    scherm.blit(Afgelopen, (500, 290))
     
     pygame.display.update()
