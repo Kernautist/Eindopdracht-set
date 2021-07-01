@@ -206,16 +206,16 @@ def VindSets(kaarten):
     sets = []
     for i in range(len(kaarten)):
         if kaarten[i] == 0:
-            continue
+            continue  # Als kaarten[i]==0, dan ligt er op de i-de plek eigenlijk geen kaart. We slaan deze daarom over.
         else:
             kaart1 = kaarten[i]  # kaart1 is de eerste van de drie kaarten die we op een set controleren. 
             for j in range(i + 1,len(kaarten)): #door kaarten met index 0 t/m i niet mee te rekenen, voorkomen we dat er dubbele sets gevonden worden. Ook zorgt dit ervoor dat kaarten geen set met zichzelf vormen.
-                if kaarten[j] == 0:
+                if kaarten[j] == 0:  # Als kaarten[j]==0, dan ligt er op de j-de plek eigenlijk geen kaart. We slaan deze daarom over.
                     continue
                 else:
                     kaart2 = kaarten[j]
                     for k in range(j + 1,len(kaarten)): #door kaarten met index 0 t/m j niet mee te rekenen, voorkomen we dat er dubbele sets gevonden worden.
-                        if kaarten[k] == 0:
+                        if kaarten[k] == 0:  # Als kaarten[k]==0, dan ligt er op de k-de plek eigenlijk geen kaart. We slaan deze daarom over.
                             continue
                         else:
                             kaart3 = kaarten[k]
@@ -263,13 +263,6 @@ def vervang_kaarten(kaarten, pot):
         De lijst met alle kaarten in de pot na het vervangen van de eerste 3 kaarten.
     
     '''
-    if len(VindSets(kaarten)) == 0:  # Als er geen sets gemaakt kunnen worden.
-        for i in range(3):
-            kaarten[i] = pot.pop()  # Vervang 3 kaarten voor een kaart uit de pot.
-    else:  # Als er wel sets gevonden kunnen worden.
-        '''
-        zullen we hier nog een elif plaatsen voor als er wel sets te vinden zijn?
-        Dit bespaart ons werk in het document set_displaly.py zodat deze wat
-        overzichtelijker wordt.
-        '''
+    for i in range(3):
+        kaarten[i] = pot.pop()  # Vervang 3 kaarten voor een kaart uit de pot.
     return kaarten, pot
