@@ -49,22 +49,6 @@ class Kaart:
         '''
         self.kleur, self.figuur, self.opvulling, self.aantal = invoer  # Hier worden alle eigenschappen daadwerkelijk toegekend aan het object self
     
-    ''' even kijken of onderstaande functie wordt gebruikt in de code '''
-    # def lijst(self):
-    #     return [self.kleur, self.figuur, self.opvulling, self.aantal]
-    
-    ''' Onderstaande functie kan wat mij betreft verwijderd worden na het programma af is, het heeft namelijk geen functie in het computerprogramma zelf.'''
-    # def __str__(self): #zo kunnen we kaarten printen en dus de eigenschappen chekken.
-    #     # Onderstaand geeft een string van de vorm 'Kleur = 1 = purple', waar 1 en purple eigenlijk hetzelfde zijn.
-    #     stringkleur = 'Kleur = ' + str(self.kleur) + ' = ' + LegendaKleur[self.kleur]
-    #     stringfiguur = '\nFiguur = ' + str(self.figuur) + ' = ' + LegendaFiguur[self.figuur] #\n creëert nieuwe regel
-    #     stringopvulling = '\nOpvulling = ' + str(self.opvulling) + ' = ' + LegendaOpvulling[self.opvulling] #\n creëert nieuwe regel
-    #     stringaantal = '\nAantal = ' + str(self.aantal) + ' = ' + LegendaAantal[self.aantal] #\n creëert nieuwe regel
-        
-    #     outputstring = stringkleur + stringfiguur + stringopvulling + stringaantal
-    
-    #     return outputstring
-    
     def __eq__(self, other):
         '''
         Checkt of twee kaarten gelijk zijn aan elkaar
