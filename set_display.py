@@ -60,10 +60,10 @@ Kaarten = []  # Dit zijn de kaarten die op tafel liggen
 for i in range(12):
     Kaarten.append(Pot.pop())  # We halen 12 keer een kaart van de pot af en 'leggen die op tafel', in de verzameling Kaarten.
 
-Arial24 = pygame.font.Font('Arial.ttf', 24)
+Arial24 = pygame.font.Font('Arial.ttf', 24)  # Creëert een lettertype dat we later zullen gebruiken.
 Arial40 = pygame.font.Font('Arial.ttf', 40)
 Arial60 = pygame.font.Font('Arial.ttf', 60)
-wit = pygame.Color('white')
+wit = pygame.Color('white')  # Creëert een kleur die we later zullen gebruiken.
 zwart = pygame.Color('black')
 kaart_keuze = []  # Dit is de lijst met kaarten die de speler heeft ingevoerd.
 begonnen = False  # Wordt true zodra het spel echt begonnen is.
@@ -74,7 +74,7 @@ set_invoer = ''  # Hierin voert de gebruiker de kaartnummers van een set in.
 set_invoer_rh = pygame.Rect(450, 568, 140, 32)  # Rechthoek waarin de kaarten van een set ingevoerd worden.
 score_speler = 0
 score_computer = 0
-geen_set = 0
+geen_set = 0  # Aantal keer dat er geen set op tafel ligt.
 
 nummer1 = Arial24.render('1', True, zwart)  # Creëert een afbeelding met een zwarte 1, welke later pas afgebeeld wordt.
 nummer2 = Arial24.render('2', True, zwart)
@@ -101,11 +101,10 @@ while not begonnen:
             pygame.quit()
             sys.exit()
         if event.type == pygame.KEYDOWN:  # Er wordt een toets ingedrukt.
-            if event.key == pygame.K_RETURN and len(tijd_invoer) > 0: # Return is hetzelfde als Enter. Dit doet pas iets als er iets ingevoerd is.
+            if event.key == pygame.K_RETURN and len(tijd_invoer) > 0: # Return is hetzelfde als Enter. Dit doet slechts iets als er iets ingevoerd is.
                 tijd = int(tijd_invoer)  # Slaat de ingevoerde tijd op.
-                tijd_invoer = ''
-                begonnen = True
-            elif event.key == pygame.K_BACKSPACE and len(tijd_invoer) > 0:  # Backspace doet pas iets als er iets ingevoerd is.
+                begonnen = True  # Dit zorgt dat de while-loop verlaten wordt.
+            elif event.key == pygame.K_BACKSPACE and len(tijd_invoer) > 0:  # Backspace doet slechts iets als er iets ingevoerd is.
                 tijd_invoer = tijd_invoer[:-1]  # Zorgt dat de nieuwe invoer een karakter korter is dan de oude.
             elif event.unicode in ['0','1','2','3','4','5','6','7','8','9'] and len(tijd_invoer) < 2:
                 '''Bovenstaand elif-statement checkt of de toets die ingedrukt wordt een cijfer is,
@@ -164,7 +163,7 @@ while begonnen: # Deze loop wordt gerund terwijl het spel gespeeld wordt, tot he
     scherm.blit(set_invoer_surface, (set_invoer_rh.x + 6, set_invoer_rh.y + 2))  # Beeldt het ingevoerde kaartnummer af op het scherm.
     pygame.draw.rect(scherm, wit, set_invoer_rh , 2)  # Tekent een rechthoek om het de invoer-box.
     
-    '''Het onderstaande geeft aan welke kaartnummers de gebruiker al eerder ingevoerd heeft, voor op enter te hebben gedrukt.'''
+    '''Het onderstaande beeldt af welke kaartnummers de gebruiker al eerder ingevoerd heeft, voor op enter te hebben gedrukt.'''
     if len(kaart_keuze) == 0:  # Er waren nog geen kaarten ingevoerd.
         kaart_keuze_string = 'Ingevoerde kaarten: '
     elif len(kaart_keuze) == 1:  # Er was al één kaart ingevoerd.
@@ -194,7 +193,7 @@ while begonnen: # Deze loop wordt gerund terwijl het spel gespeeld wordt, tot he
             t0 = time.time()  # De tijd wordt gereset.
         kaart_keuze = []  # De ingevoerde kaarten worden gereset.
 
-    '''DE TIJD IS OM'''
+    '''Checkt of de tijd om is. Indien er een set lag, krijgt de computer een punt.'''
     t1 = time.time()  # Slaat de huidige tijd op.
     if t1 - t0 > tijd:
         if len(set.VindSets(Kaarten)) != 0:  # Wanneer er een set op tafel ligt
@@ -202,19 +201,20 @@ while begonnen: # Deze loop wordt gerund terwijl het spel gespeeld wordt, tot he
             GevondenSet = set.VindSets(Kaarten)[0]
             for i in range(3):
                 if len(Pot) != 0:
-                    Kaarten[int(Kaarten.index(GevondenSet[i]))] = Pot.pop()
+                    Kaarten[int(Kaarten.index(GevondenSet[i]))] = Pot.pop()  # De kaarten worden vervangen.
                 else:
-                    Kaarten[int(Kaarten.index(GevondenSet[i]))] = 0
+                    Kaarten[int(Kaarten.index(GevondenSet[i]))] = 0  # Indien de pot leeg is, kunnen de kaarten niet aangevuld worden.
         else:  # Wanneer er geen sets op tafel liggen
             geen_set += 1
             set.vervang_kaarten(Kaarten, Pot)
         t0 = time.time()
     
-    '''END CONDITION'''
+    '''Checkt of het spel afgelopen is'''
     if len(set.VindSets(Kaarten)) == 0 and len(Pot) == 0:
         begonnen = False
     
-    '''SCORE WEERGEVEN'''
+    '''Weergeeft de score van de speler en computer.
+    Eerst creëren we 3 afbeeldingen met scores, die we daarna afbeelden op het scherm'''
     score_speler_surface = Arial24.render('Score speler: ' + str(score_speler), True, wit)
     score_computer_surface = Arial24.render('Score computer: ' + str(score_computer), True, wit)
     geen_set_surface = Arial24.render('Aantal keer geen set: ' + str(geen_set), True, wit)
@@ -222,19 +222,19 @@ while begonnen: # Deze loop wordt gerund terwijl het spel gespeeld wordt, tot he
     scherm.blit(score_computer_surface, (900,42))
     scherm.blit(geen_set_surface, (900,74))
     
-    '''POT WEERGEVEN'''
+    '''Weergeeft hoeveel kaarten er nog in de pot zitten.'''
     pot_surface = Arial40.render('Kaarten in pot: ' + str(len(Pot)), True, wit)
     scherm.blit(pot_surface, (450,10))
     
-    '''TIMER WEERGEVEN'''
+    '''Weergeeft hoeveel tijd de speler nog heft om een set te vinden.'''
     tijd_surface = Arial40.render('Tijd over: ' + str(round(tijd-(t1-t0), 1)), True, wit)
     scherm.blit(tijd_surface, (450,58))
     
-    '''Kaarten rooster ziet er als volgt uit:
+    '''Nu gaan we de kaarten en daar overheen de kaartnummers afbeelden op het scherm.
+    Het kaartenrooster ziet er als volgt uit:
     1 4 7 10
     2 5 8 11
-    3 6 9 12
-    '''
+    3 6 9 12'''
     scherm.blit(Afbeelding(Kaarten[0]), (10,10))
     scherm.blit(nummer1, (12,12))
     scherm.blit(Afbeelding(Kaarten[1]), (10,220))
@@ -262,16 +262,23 @@ while begonnen: # Deze loop wordt gerund terwijl het spel gespeeld wordt, tot he
     
     pygame.display.update()  # Updatet het scherm. Alle afbeeldingen die op het scherm geplaatst zijn, worden hier daadwerkelijk pas afgebeeld.
 
-'''INVOER OPVRAAG, INVOER BOX, INGEVOERDE KAARTEN RESETTEN'''
+'''Zodra het spel afgelopen is, hoeft de speler niets meer in te voeren.
+Alle dingen op het scherm betreffende de invoer maken we darom zwart.'''
 scherm.fill(zwart, (450, 534, 700, 106))
 
+'''Hier beelden we af of de speler gewonnen, verloren, of gelijkgespeeld heeft.'''
 if score_speler > score_computer:
     Afgelopen = Arial60.render('Je hebt gewonnen! :D', True, wit)
 elif score_speler < score_computer:
     Afgelopen = Arial60.render("Je hebt verloren! :'(", True, wit)
 else:
     Afgelopen = Arial60.render('Je hebt gelijk gespeeld!', True, wit)
+scherm.blit(Afgelopen, (500, 290))
+pygame.display.update()  # Om het af te beelden, moet het scherm natuurlijk geüpdatet worden.
 
+'''Onderstaande while-loop zorgt ervoor dat het programma niet abrupt afsluit zodra
+het spel afgelopen is. Het enige wat in de loop gebeurt, is dan ook slechts het
+checken of de gebruiker het programma afsluit.'''
 while True:
     for event in pygame.event.get():
         '''In deze for-loop wordt voor alle events die pygame registreert,
@@ -280,9 +287,3 @@ while True:
         if event.type == pygame.QUIT:  # Het programma wordt afgesloten.
             pygame.quit()
             sys.exit()
-    
-    '''AFGELOPEN WEERGEVEN'''
-    scherm.fill(zwart, (500, 290, 650, 100))
-    scherm.blit(Afgelopen, (500, 290))
-    
-    pygame.display.update()
