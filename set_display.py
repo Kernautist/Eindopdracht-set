@@ -1,252 +1,289 @@
-'''
-Dit bestand bevat alle algoritmen, functies en klassen die nodig zijn voor het functioneren van het spel set.
-Denk hierbij bijvoorbeeld aan een algoritme voor het checken of drie kaarten een set vormen.
-'''
+import set  # Importeert alle functies van het document set.py
+import sys, pygame  # Importeert de libraries sys en pygame, welke nodig zijn voor het visualiseren
+import time  # Deze library hebben we nodig om een timer bij te kunnen houden
+pygame.init()  # Initialiseert alle pygame modules
 
-import random
-
-#In het programma zullen we de eigenschappen van de kaarten aangeven met 0, 1 of 2
-#In onderstaande dictionaries staat wat voor betekenis dit getal daadwerkelijk heeft
-LegendaKleur = {
-0 : 'green',
-1 : 'purple',
-2 : 'red'}
-
-LegendaFiguur = {
-0 : 'diamond',
-1 : 'oval',
-2 : 'squiggle'}
-
-LegendaOpvulling = {
-0 : 'empty',
-1 : 'filled',
-2 : 'shaded'}
-
-LegendaAantal = {
-0 : '1',
-1 : '2',
-2 : '3'}
-
-class Kaart:
+def Kaart(invoer):
     '''
-    De klasse van kaarten in het spel set. 
-    Alle kaarten hebben een unieke combinatie van vier eigenschappen: 
-        - kleur
-        - figuur
-        - opvulling
-        - aantal.
-    '''
-    def __init__(self, invoer = [0,0,0,0]):
-        '''
-        Initialiseert een kaart. Deze functie wordt dus aangeroepen wanneer er
-        een nieuwe kaart gegenereerd wordt.
-        
-        Parameters
-        ----------
-        invoer : list
-            Elk van de elementen van deze lijst representeert een eigenschap
-            van de kaart. De standaardwaarde is [0,0,0,0].
-        '''
-        self.kleur, self.figuur, self.opvulling, self.aantal = invoer  # Hier worden alle eigenschappen daadwerkelijk toegekend aan het object self
-    
-    def __eq__(self, other):
-        '''
-        Checkt of twee kaarten gelijk zijn aan elkaar
-
-        Parameters
-        ----------
-        self : Kaart
-        
-        other : Kaart
-
-        Returns
-        -------
-        bool
-            True als alle eigenschappen hetzelfde zijn, maar False als er
-            minstens één eigenschap niet gelijk is.
-
-        '''
-        for eigenschap in ['kleur', 'figuur', 'opvulling', 'aantal']:  # We gaan alle eigenschappen los bijlangs
-            if getattr(self, eigenschap) == getattr(other, eigenschap):  # Per eigenschap controleren we of de kaarten overeenkomen wat betreft die eingenschap
-                '''
-                Simpelweg 'self.eigenschap' werkt hierboven niet, aangezien 'eigenschap' geen attribute is van self.
-                Daarom moeten we de functie getattr() gebruiken, deze gebruikt wel de attribute kleur als eigenschap='kleur'
-                '''
-                continue  # Als de eigenschap overeenkomt, gaan we door met het checken van de volgende eigenschap.
-            else:
-                return False  # Als de eigenschap niet overeenkomt, zijn de kaarten niet gelijk.
-        return True  # Als deze code bereikt wordt, betekent dit dat alle eigenschappen overeenkomen en dus dat de kaarten gelijk zijn.
-
-    def gifnaam(self):
-        '''
-        Creëert de naam van het gifbestand van de afbeelding die bij een kaart
-        hoort. Zo wordt '[0,0,0,0]' 'greendiamondempty1.gif'.
-
-        Returns
-        -------
-        gifnaam : string
-            De naam van het .gif bestand dat bij een kaart hoort.
-
-        '''
-        kleur = LegendaKleur[self.kleur]
-        figuur = LegendaFiguur[self.figuur]
-        opvulling = LegendaOpvulling[self.opvulling]
-        aantal = LegendaAantal[self.aantal]
-        
-        gifnaam = kleur + figuur + opvulling + aantal + '.gif'
-        
-        return gifnaam
-    
-    def Pad(self):
-        '''
-        Genereert het pad om bij een afbeelding van een kaart te komen.
-        Omdat dit programma in dezelfde map opgeslagen staat als de map 'kaarten',
-        voldoet  om bij de invoer '[0,0,0,0]' als uitvoer
-        'kaarten\greendiamondempty1.gif' te geven.
-    
-        Parameters
-        ----------
-        invoer : list
-            Deze lijst van 4 variabelen stelt een kaart voor.
-    
-        Returns
-        -------
-        Pad : string
-            Deze string stelt dus het pad voor dat je vanaf de locatie van dit
-            pythonbestand 'af moet leggen' om bij een .gif afbeelding van een
-            kaart te komen.
-    
-        '''
-        Pad = 'kaarten\\' + self.gifnaam()  # Hier is een dubbele backslash nodig, omdat een enkele backslash op een andere manier geïnterpreteerd wordt door python.
-        return Pad
-
-def IsSet(kaart1, kaart2, kaart3):
-    '''
-    Deze functie controleert of drie gegeven kaarten samen een set vormen.
+    Initialiseert een kaart, zoals gedefiniëerd in set.py.
+    Deze functie voorkomt dat je elke keer 'set.' moet schrijven voor Kaart(),
+    wat de code overzichtelijker maakt.
 
     Parameters
     ----------
-    kaart1 : Kaart
-        Dit is de eerste van de drie kaarten.
-    kaart2 : Kaart
-        Dit is de tweede van de drie kaarten.
-    kaart3 : Kaart
-        Dit is de derde en laatste kaart.
+    invoer : list
+        Een lijst van 4 variabelen die een kaart voorstelt.
 
     Returns
     -------
-    bool
-        Als de drie kaarten een set vormen, dan is deze bool True. Zo niet,
-        dan is de bool False.
+    Kaart
+        De kaart behorend bij de lijst 'invoer'.
 
     '''
-    if kaart1 == kaart2 == kaart3:
-        return False  # Een kaart kan natuurlijk geen set vormen met zichzelf
+    return set.Kaart(invoer)
+
+def Afbeelding(invoer):
+    '''
+    Laadt de afbeelding in die bij die kaart 'invoer' hoort.
+    Deze afbeelding wordt slechts ingeladen, nog niet op het scherm geplaatst.
+
+    Parameters
+    ----------
+    invoer : list of int
+        Deze lijst met 4 variabelen stelt een kaart voor. Het kan echter
+        voorkomen dat er geen kaarten meer over zijn, dan zal de invoer gelijk
+        zijn aan 0.
+
+    Returns
+    -------
+    afbeelding : pygame.Surface
+        Dit is de afbeelding die hoort bij de kaart 'invoer'. Indien de invoer
+        '0' is, zal deze afbeelding volledig zwart zijn.
+
+    '''
+    if invoer == 0: 
+        afbeelding = pygame.image.load('kaarten\\black.gif').convert()  # Dubbele backslash wordt geïnterpreteerd als een enkele.
     else:
-        for eigenschap in ['kleur', 'figuur', 'opvulling', 'aantal']: # we gaan alle eigenschappen los bijlangs.
-            #We willen nu per eigenschap checken dat ofwel alle kaarten gelijk zijn, ofwel allemaal verschillend
-            if getattr(kaart1, eigenschap) == getattr(kaart2, eigenschap): #dit is True als kaart 1 en 2 gelijke eigenschap hebben, maar False als ze andere eigenschap hebben.
-                #Als het True is, moet kaart 3 ook gelijke eigenschap hebben als kaart1 (en daarmee ook kaart2).
-                if getattr(kaart1, eigenschap) == getattr(kaart3, eigenschap):
-                    #Als kaart3 ook dezelfde eigenschap heeft, dan levert deze eigenschap geen problemen op en kan het een set zijn, afhankelijk van de andere eigenschappen. We gaan dus door naar de volgende eigenschap
-                    continue
-                else:
-                    #Als kaart3 verschilt in deze eigenschap, kan het kaartentrio dus geen set zijn. We stoppen met checken en returnen False
-                    return False
-            else:
-                #Als kaart1 en kaart2 verschillen, moet ook kaart 3 verschillende eigenschap hebben van kaart1 én van kaart2.
-                if getattr(kaart1, eigenschap) != getattr(kaart3, eigenschap) and getattr(kaart2, eigenschap) != getattr(kaart3, eigenschap):
-                    #In dit geval hebben dus alledrie de kaarten een verschillende eigenschap, wat betekent dat we door kunnen met het checken van de volgende eigenschap
-                    continue
-                else:
-                    #In dit geval heeft kaart3 gelijke eigenschap als kaart1 of kaart2, terwijl kaart1 en kaart2 verschillende eigenschap hebben.
-                    #Het is dus geen set, en we returnen False.
-                    return False        
-        #Als deze code bereikt wordt, betekent dat dat er geen fout is aangetroffen. We returnen daarom True.
-        return True
+        afbeelding = pygame.image.load(Kaart(invoer).Pad()).convert()  # Wat .convert() doet is lastig uit te leggen, maar dit zorgt ervoor dat het laden van alle pixels sneller gaat.
+    return afbeelding
 
-def VindSets(kaarten):
-    '''
-    Voor een gegeven verzameling kaarten, geeft deze functie alle mogelijke
-    sets die gemaakt kunnen worden. Dit doen we door alle mogelijke
-    combinaties van 3 kaarten bijlangs te gaan en dan met de functie IsSet te
-    kijken of ze een set vormen.
+'''Het programma staat geschreven in een while-loop. Voordat we daar komen,
+definiëren we eerst een aantal variabelen die niet veranderen. Het heeft
+immers geen zin om deze talloze keren per seconde opnieuw te definiëren.'''
 
-    Parameters
-    ----------
-    kaarten : list
-        Deze lijst bevat, zoals de naam suggereert, kaarten (waar elke kaart
-        als een lijst met 4 variabelen weergeven wordt). In de praktijk zullen
-        dit altijd de 12 kaarten zijn die op tafel liggen.
+grootte = breedte, hoogte = 1200, 640  # Hier stellen we de grootte van het scherm vast.
+scherm = pygame.display.set_mode(grootte)  # Creëert het scherm, met ingestelde grootte
+pygame.display.set_caption("Set")  # Zorgt dat het venster 'Set' heet ipv 'pygame window'
 
-    Returns
-    -------
-    sets : list
-        Deze lijst bevat alle mogelijke sets die gemaakt kan worden met de
-        gespecificeerde kaarten. Hier is een set weergeven als een lijst met
-        daarin weer drie lijsten die ieder een kaart voorstellen.
+Pot = set.Pot()  # Maakt een lijst 'Pot' aan met alle mogelijke kaarten
+Kaarten = []  # Dit zijn de kaarten die op tafel liggen
+for i in range(12):
+    Kaarten.append(Pot.pop())  # We halen 12 keer een kaart van de pot af en 'leggen die op tafel', in de verzameling Kaarten.
 
-    '''
-    sets = []
-    for i in range(len(kaarten)):
-        if kaarten[i] == 0:
-            continue  # Als kaarten[i]==0, dan ligt er op de i-de plek eigenlijk geen kaart. We slaan deze daarom over.
-        else:
-            kaart1 = kaarten[i]  # kaart1 is de eerste van de drie kaarten die we op een set controleren. 
-            for j in range(i + 1,len(kaarten)):  # Door kaarten met index 0 t/m i niet mee te rekenen, voorkomen we dat er dubbele sets gevonden worden. Ook zorgt dit ervoor dat kaarten geen set met zichzelf vormen.
-                if kaarten[j] == 0:  # Als kaarten[j]==0, dan ligt er op de j-de plek eigenlijk geen kaart. We slaan deze daarom over.
-                    continue
-                else:
-                    kaart2 = kaarten[j]
-                    for k in range(j + 1,len(kaarten)): #door kaarten met index 0 t/m j niet mee te rekenen, voorkomen we dat er dubbele sets gevonden worden.
-                        if kaarten[k] == 0:  # Als kaarten[k]==0, dan ligt er op de k-de plek eigenlijk geen kaart. We slaan deze daarom over.
-                            continue
-                        else:
-                            kaart3 = kaarten[k]
-                            if IsSet(Kaart(kaart1),Kaart(kaart2),Kaart(kaart3)):
-                                sets.append([kaart1, kaart2, kaart3]) # Als de drie kaarten een set vormen, worden ze toegevoegd aan de lijst met gevonden sets.
-    return sets
+Arial24 = pygame.font.Font('Arial.ttf', 24)  # Creëert een lettertype dat we later zullen gebruiken.
+Arial40 = pygame.font.Font('Arial.ttf', 40)
+Arial60 = pygame.font.Font('Arial.ttf', 60)
+wit = pygame.Color('white')  # Creëert een kleur die we later zullen gebruiken.
+zwart = pygame.Color('black')
+kaart_keuze = []  # Dit is de lijst met kaarten die de speler heeft ingevoerd.
+begonnen = False  # Wordt true zodra het spel echt begonnen is.
+tijd_invoer = ''  # Hierin voert de gebruiker in hoeveel tijd hij zichzelf geeft.
+tijd_invoer_rh = pygame.Rect(580, 300, 40, 32)  # Rechthoek waarin de tijd ingevoerd wordt.
+tijd_opvraag = Arial24.render('Hoeveel tijd wil je jezelf geven om een set te vinden? Voer een waarde in tussen 1 en 99 seconden.', True, wit)  # In deze variabele is de afbeelding van deze tekst opgeslagen, maar nog niet afgebeeld.
+set_invoer = ''  # Hierin voert de gebruiker de kaartnummers van een set in.
+set_invoer_rh = pygame.Rect(450, 568, 140, 32)  # Rechthoek waarin de kaarten van een set ingevoerd worden.
+score_speler = 0
+score_computer = 0
+geen_set = 0  # Aantal keer dat er geen set op tafel ligt.
 
-def Pot():
-    '''
-    Creëert een lijst die de pot voor moet stellen.
+nummer1 = Arial24.render('1', True, zwart)  # Creëert een afbeelding met een zwarte 1, welke later pas afgebeeld wordt.
+nummer2 = Arial24.render('2', True, zwart)
+nummer3 = Arial24.render('3', True, zwart)
+nummer4 = Arial24.render('4', True, zwart)
+nummer5 = Arial24.render('5', True, zwart)
+nummer6 = Arial24.render('6', True, zwart)
+nummer7 = Arial24.render('7', True, zwart)
+nummer8 = Arial24.render('8', True, zwart)
+nummer9 = Arial24.render('9', True, zwart)
+nummer10 = Arial24.render('10', True, zwart)
+nummer11 = Arial24.render('11', True, zwart)
+nummer12 = Arial24.render('12', True, zwart)
+
+while not begonnen:
+    '''Deze while-loop herhaalt zichzelf totdat het programma afgesloten wordt,
+    of tot er een geldige waarde ingevoerd wordt.'''
+    scherm.fill(zwart)
+    for event in pygame.event.get():
+        '''In deze for-loop wordt voor alle events die pygame registreert,
+        gecheckt of het een event is die voor ons van belang is. Zo ja, dan
+        doen we er iets mee.'''
+        if event.type == pygame.QUIT:  # Het programma wordt afgesloten.
+            pygame.quit()
+            sys.exit()
+        if event.type == pygame.KEYDOWN:  # Er wordt een toets ingedrukt.
+            if event.key == pygame.K_RETURN and len(tijd_invoer) > 0: # Return is hetzelfde als Enter. Dit doet slechts iets als er iets ingevoerd is.
+                tijd = int(tijd_invoer)  # Slaat de ingevoerde tijd op.
+                begonnen = True  # Dit zorgt dat de while-loop verlaten wordt.
+            elif event.key == pygame.K_BACKSPACE and len(tijd_invoer) > 0:  # Backspace doet slechts iets als er iets ingevoerd is.
+                tijd_invoer = tijd_invoer[:-1]  # Zorgt dat de nieuwe invoer een karakter korter is dan de oude.
+            elif event.unicode in ['0','1','2','3','4','5','6','7','8','9'] and len(tijd_invoer) < 2:
+                '''Bovenstaand elif-statement checkt of de toets die ingedrukt wordt een cijfer is,
+                en of de invoer kleiner dan 2 karakters is. Zo zorgen we dat de invoer altijd bestaat uit maximaal 2 cijfers.'''
+                tijd_invoer += event.unicode
+
+    scherm.blit(tijd_opvraag, (100,240))  # Beeldt de tekst af op het scherm.
     
-    Returns
-    -------
-    pot : list
-        Dit is de pot, de stapel (in ons geval lijst) met alle nog ongebruikte
-        kaarten.
-
-    '''
-    pot = []
-    for i in range(3):  # Hier staat elk van de 4 for-loops voor één van de eigenschappen van een kaart. Alle mogelijke combinaties van eigenschappen worden zo bijlangs gegaan.
-        for j in range(3):
-            for k in range(3):
-                for l in range(3):
-                    pot.append([i,j,k,l])  # Voegt de gevonden kaart toe aan de pot, maar dit is nog op een systematische volgorde.
-    random.shuffle(pot)  # Zorgt ervoor dat de pot in een willekeurige volgorde is.
-    return pot
-
-def vervang_kaarten(kaarten, pot):
-    '''
-    Haalt drie kaarten van tafel, en vervangt deze voor kaarten uit de pot.
+    tijd_invoer_surface = Arial24.render(tijd_invoer, True, wit)  # Creëert een afbeelding met de ingevoerde tijd.
+    scherm.blit(tijd_invoer_surface, (tijd_invoer_rh.x + 6, tijd_invoer_rh.y + 2))  # Beeldt de ingevoerde tijd af op het scherm.
     
-    Parameters
-    ----------
-    kaarten : list
-        Dit is de lijst met alle kaarten die op tafel liggen.
-    pot : list
-        Dit is de lijst met alle nog ongebruikte kaarten, de pot.
-
-    Returns
-    -------
-    kaarten : list
-        De lijst met alle kaarten op tafel,
-        na het evt. vervangen van de eerste 3 kaarten.
-    pot : list
-        De lijst met alle kaarten in de pot na het vervangen van de eerste 3 kaarten.
     
-    '''
-    for i in range(3):
-        kaarten[i] = pot.pop()  # Vervang 3 kaarten voor een kaart uit de pot.
-    return kaarten, pot
+    pygame.draw.rect(scherm, wit, tijd_invoer_rh , 2)  # Tekent een  rechthoek om de invoer-box.
+    
+    pygame.display.update()  # Updatet het scherm, zodat alle veranderingen zichtbaar worden.
+
+scherm.fill(zwart)  # Hele scherm wordt gereset
+t0 = time.time()  # Nodig voor de timer. t0 is het tijdstip op dit moment.
+
+while begonnen: # Deze loop wordt gerund terwijl het spel gespeeld wordt, tot het spel wordt afgesloten
+    '''Deze while-loop herhaalt zich tot het programma afgesloten wordt.'''
+    scherm.fill(zwart)
+    for event in pygame.event.get():
+        '''In deze for-loop wordt voor alle events die pygame registreert,
+        gecheckt of het een event is die voor ons van belang is. Zo ja, dan
+        doen we er iets mee.'''
+        if event.type == pygame.QUIT:  # Als op het kruisje gedrukt wordt, dan moet het programma afsluiten
+            pygame.quit()
+            sys.exit()
+        if event.type == pygame.KEYDOWN:  # Checkt of er een toets wordt ingedrukt.
+            if event.key == pygame.K_RETURN:  # Return is hetzelfde als enter.
+                if set_invoer in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']:  # Checkt of de invoer een geldig kaartnummer is.
+                    kaart_keuze.append(set_invoer)  # Registreert de invoer als keuze.
+                set_invoer = ''
+            elif event.key == pygame.K_BACKSPACE and len(set_invoer) > 0:  # Als er nog niets is ingevoerd, doet backspace niets.
+                set_invoer = set_invoer[:-1]  # Verwijdert laatste element van de invoer.
+            elif event.key == pygame.K_ESCAPE:  # Escape reset alle ingevoerde kaarten.
+                set_invoer = ''
+                kaart_keuze = []
+            elif event.unicode in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'] and len(set_invoer)<2:
+                '''Bovenstaand elif-statement checkt of de toets die ingedrukt wordt een cijfer is,
+                en of de invoer kleiner dan 2 karakters is. Zo zorgen we dat de invoer altijd bestaat uit maximaal 2 cijfers.'''
+                set_invoer += event.unicode
+
+    '''Het onderstaande vraagt de gebruiker zijn/haar eerste, tweede of derde kaartnummer in te voeren.'''
+    if len(kaart_keuze) == 0:  # Er waren nog geen kaarten ingevoerd.
+        set_opvraag_surface = Arial24.render('Voer het kaartnummer in van de eerste kaart van je gevonden set:', True, wit)
+    elif len(kaart_keuze) == 1:  # Er was al één kaart ingevoerd.
+        set_opvraag_surface = Arial24.render('Voer het kaartnummer in van de tweede kaart van je gevonden set:', True, wit)
+    else:  # Er waren al twee kaarten ingevoerd.
+        set_opvraag_surface = Arial24.render('Voer het kaartnummer in van de derde kaart van je gevonden set:', True, wit)
+    scherm.blit(set_opvraag_surface, (450, 534))  # Beeldt de tekst af op het scherm.
+    
+    '''Het onderstaande beeldt de invoer-box af waar de gebruiker de kaartnummers invoert.'''
+    set_invoer_surface = Arial24.render(set_invoer, True, wit)  # Maakt een afbeelding van het ingevoerde kaartnummer.
+    scherm.blit(set_invoer_surface, (set_invoer_rh.x + 6, set_invoer_rh.y + 2))  # Beeldt het ingevoerde kaartnummer af op het scherm.
+    pygame.draw.rect(scherm, wit, set_invoer_rh , 2)  # Tekent een rechthoek om het de invoer-box.
+    
+    '''Het onderstaande beeldt af welke kaartnummers de gebruiker al eerder ingevoerd heeft, voor op enter te hebben gedrukt.'''
+    if len(kaart_keuze) == 0:  # Er waren nog geen kaarten ingevoerd.
+        kaart_keuze_string = 'Ingevoerde kaarten: '
+    elif len(kaart_keuze) == 1:  # Er was al één kaart ingevoerd.
+        kaart_keuze_string = 'Ingevoerde kaarten: ' + kaart_keuze[0]
+    elif len(kaart_keuze) == 2:  # Er ware nal twee kaarten ingevoerd.
+        kaart_keuze_string = 'Ingevoerde kaarten: ' + kaart_keuze[0] + ', ' + kaart_keuze[1]
+    kaart_keuze_surface = Arial24.render(kaart_keuze_string, True, wit)  # Maakt een afbeelding van de tekst
+    scherm.blit(kaart_keuze_surface, (450, 605))  # Beeldt de tekst af op het scherm.
+    
+    '''In het onderstaande checkt de computer of de ingevoerde kaarten door de
+    gebruiker een set zijn. Indien dit niet zo is, gebeurt er niets. Indien 
+    dit wél zo is, dan wordt de set weggehaald en komen er drie nieuwe kaarten
+    uit de pot. Ook wordt de score met 1 verhoogd.'''    
+    if len(kaart_keuze) == 3:  # Checkt of er 3 kaarten zijn ingevoerd.
+        Kaart1 = Kaart(Kaarten[int(kaart_keuze[0]) -1])  # Maakt een Kaart van de lijst die de eerste kaart voorstelt die de speler ingevoerd heeft.
+        Kaart2 = Kaart(Kaarten[int(kaart_keuze[1]) -1])  # Maakt een Kaart van de lijst die de tweede kaart voorstelt die de speler ingevoerd heeft.
+        Kaart3 = Kaart(Kaarten[int(kaart_keuze[2]) -1])  # Maakt een Kaart van de lijst die de derde kaart voorstelt die de speler ingevoerd heeft.
+        if set.IsSet(Kaart1, Kaart2, Kaart3):
+            '''Als de ingevoerde kaarten een set vormen, krijgt de speler een
+            punt en worden de drie kaarten vervangen.'''
+            score_speler += 1
+            for i in range(3):
+                if len(Pot) != 0:
+                    Kaarten[int(kaart_keuze[i])-1] = Pot.pop()  # De kaarten worden vervangen.
+                else:
+                    Kaarten[int(kaart_keuze[i])-1] = 0  # Als de pot leeg is, dan kan deze niet aangevuld worden.
+            t0 = time.time()  # De tijd wordt gereset.
+        kaart_keuze = []  # De ingevoerde kaarten worden gereset.
+
+    '''Checkt of de tijd om is. Indien er een set lag, krijgt de computer een punt.'''
+    t1 = time.time()  # Slaat de huidige tijd op.
+    if t1 - t0 > tijd:
+        if len(set.VindSets(Kaarten)) != 0:  # Wanneer er een set op tafel ligt
+            score_computer += 1
+            GevondenSet = set.VindSets(Kaarten)[0]
+            for i in range(3):
+                if len(Pot) != 0:
+                    Kaarten[int(Kaarten.index(GevondenSet[i]))] = Pot.pop()  # De kaarten worden vervangen.
+                else:
+                    Kaarten[int(Kaarten.index(GevondenSet[i]))] = 0  # Indien de pot leeg is, kunnen de kaarten niet aangevuld worden.
+        else:  # Wanneer er geen sets op tafel liggen
+            geen_set += 1
+            set.vervang_kaarten(Kaarten, Pot)
+        t0 = time.time()
+    
+    '''Checkt of het spel afgelopen is'''
+    if len(set.VindSets(Kaarten)) == 0 and len(Pot) == 0:
+        begonnen = False
+    
+    '''Weergeeft de score van de speler en computer.
+    Eerst creëren we 3 afbeeldingen met scores, die we daarna afbeelden op het scherm'''
+    score_speler_surface = Arial24.render('Score speler: ' + str(score_speler), True, wit)
+    score_computer_surface = Arial24.render('Score computer: ' + str(score_computer), True, wit)
+    geen_set_surface = Arial24.render('Aantal keer geen set: ' + str(geen_set), True, wit)
+    scherm.blit(score_speler_surface, (900, 10))
+    scherm.blit(score_computer_surface, (900,42))
+    scherm.blit(geen_set_surface, (900,74))
+    
+    '''Weergeeft hoeveel kaarten er nog in de pot zitten.'''
+    pot_surface = Arial40.render('Kaarten in pot: ' + str(len(Pot)), True, wit)
+    scherm.blit(pot_surface, (450,10))
+    
+    '''Weergeeft hoeveel tijd de speler nog heft om een set te vinden.'''
+    tijd_surface = Arial40.render('Tijd over: ' + str(round(tijd-(t1-t0), 1)), True, wit)
+    scherm.blit(tijd_surface, (450,58))
+    
+    '''Nu gaan we de kaarten en daar overheen de kaartnummers afbeelden op het scherm.
+    Het kaartenrooster ziet er als volgt uit:
+    1 4 7 10
+    2 5 8 11
+    3 6 9 12'''
+    scherm.blit(Afbeelding(Kaarten[0]), (10,10))
+    scherm.blit(nummer1, (12,12))
+    scherm.blit(Afbeelding(Kaarten[1]), (10,220))
+    scherm.blit(nummer2, (12,222))
+    scherm.blit(Afbeelding(Kaarten[2]), (10,430))
+    scherm.blit(nummer3, (12,432))
+    scherm.blit(Afbeelding(Kaarten[3]), (120,10))
+    scherm.blit(nummer4, (122,12))
+    scherm.blit(Afbeelding(Kaarten[4]), (120,220))
+    scherm.blit(nummer5, (122,222))
+    scherm.blit(Afbeelding(Kaarten[5]), (120,430))
+    scherm.blit(nummer6, (122,432))
+    scherm.blit(Afbeelding(Kaarten[6]), (230,10))
+    scherm.blit(nummer7, (232,12))
+    scherm.blit(Afbeelding(Kaarten[7]), (230,220))
+    scherm.blit(nummer8, (232,222))
+    scherm.blit(Afbeelding(Kaarten[8]), (230,430))
+    scherm.blit(nummer9, (232,432))
+    scherm.blit(Afbeelding(Kaarten[9]), (340,10))
+    scherm.blit(nummer10, (342,12))
+    scherm.blit(Afbeelding(Kaarten[10]), (340,220))
+    scherm.blit(nummer11, (342,222))
+    scherm.blit(Afbeelding(Kaarten[11]), (340,430))
+    scherm.blit(nummer12, (342,432))
+    
+    pygame.display.update()  # Updatet het scherm. Alle afbeeldingen die op het scherm geplaatst zijn, worden hier daadwerkelijk pas afgebeeld.
+
+'''Zodra het spel afgelopen is, hoeft de speler niets meer in te voeren.
+Alle dingen op het scherm betreffende de invoer maken we darom zwart.'''
+scherm.fill(zwart, (450, 534, 700, 106))
+
+'''Hier beelden we af of de speler gewonnen, verloren, of gelijkgespeeld heeft.'''
+if score_speler > score_computer:
+    Afgelopen = Arial60.render('Je hebt gewonnen! :D', True, wit)
+elif score_speler < score_computer:
+    Afgelopen = Arial60.render("Je hebt verloren! :'(", True, wit)
+else:
+    Afgelopen = Arial60.render('Je hebt gelijk gespeeld!', True, wit)
+scherm.blit(Afgelopen, (500, 290))
+pygame.display.update()  # Om het af te beelden, moet het scherm natuurlijk geüpdatet worden.
+
+'''Onderstaande while-loop zorgt ervoor dat het programma niet abrupt afsluit zodra
+het spel afgelopen is. Het enige wat in de loop gebeurt, is dan ook slechts het
+checken of de gebruiker het programma afsluit.'''
+while True:
+    for event in pygame.event.get():
+        '''In deze for-loop wordt voor alle events die pygame registreert,
+        gecheckt of het een event is die voor ons van belang is. Zo ja, dan
+        doen we er iets mee.'''
+        if event.type == pygame.QUIT:  # Het programma wordt afgesloten.
+            pygame.quit()
+            sys.exit()
