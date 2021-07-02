@@ -193,7 +193,7 @@ def VindSets(kaarten):
             continue  # Als kaarten[i]==0, dan ligt er op de i-de plek eigenlijk geen kaart. We slaan deze daarom over.
         else:
             kaart1 = kaarten[i]  # kaart1 is de eerste van de drie kaarten die we op een set controleren. 
-            for j in range(i + 1,len(kaarten)): #door kaarten met index 0 t/m i niet mee te rekenen, voorkomen we dat er dubbele sets gevonden worden. Ook zorgt dit ervoor dat kaarten geen set met zichzelf vormen.
+            for j in range(i + 1,len(kaarten)):  # Door kaarten met index 0 t/m i niet mee te rekenen, voorkomen we dat er dubbele sets gevonden worden. Ook zorgt dit ervoor dat kaarten geen set met zichzelf vormen.
                 if kaarten[j] == 0:  # Als kaarten[j]==0, dan ligt er op de j-de plek eigenlijk geen kaart. We slaan deze daarom over.
                     continue
                 else:
@@ -229,7 +229,7 @@ def Pot():
 
 def vervang_kaarten(kaarten, pot):
     '''
-    Haalt drie kaarten van tafel, en vervangt deze voor kaarten uit de pot.
+    Haalt de eerste drie kaarten van tafel, en vervangt deze voor kaarten uit de pot.
     
     Parameters
     ----------
@@ -242,7 +242,7 @@ def vervang_kaarten(kaarten, pot):
     -------
     kaarten : list
         De lijst met alle kaarten op tafel,
-        na het evt. vervangen van de eerste 3 kaarten.
+        na het vervangen van de eerste 3 kaarten.
     pot : list
         De lijst met alle kaarten in de pot na het vervangen van de eerste 3 kaarten.
     
