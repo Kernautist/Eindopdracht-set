@@ -6,7 +6,9 @@ De spelregels van deze variant zijn als volgt: Er liggen 12 kaarten op tafel. De
 Het programma is voor de overzichtelijkheid opgesplitst in twee .py documenten:
 * 'set.py' waarin vrijwel alle klassen, functies en algoritmes gedefiniëerd worden.
 * 'set_display.py', waarin de nadruk ligt op de werking van het computerprogramma: het creëren van een venster, het weergeven van afbeeldingen, het uitvoeren van alle functies etc.
-Daarnaast is er een map 'kaarten', met daarin 82 .gif bestanden, één voor elke kaart uit het spel en een zwarte kaart voor als er geen kaarten meer aangevuld kunnen worden.
-Om ervoor te zorgen dat ons programma er op elke computer hetzelfde uitziet, hebben we ook het bestand 'Arial.ttf' bijgevoegd, waarin het lettertype arial opgeslagen is. We ondervonden namelijk dat het lettertype arial dat in je systeem opgeslagen is, licht kan verschillen per computer.
+
+Ook zijn nodig:
+* De map 'kaarten', met daarin 82 .gif bestanden, één voor elke kaart uit het spel en een zwarte kaart voor als er geen kaarten meer aangevuld kunnen worden.
+* 'Arial.ttf', waarin het lettertype arial opgeslagen is. We ondervonden namelijk dat het lettertype arial dat in je systeem opgeslagen is, licht kan verschillen per computer.
 # Het spel spelen
 Om het spel te spelen, moet je allevier de bovengenoemde bestanden in dezelfde map hebben gedownload. Dit kun je eenvoudig doen door het bijgevoegde .zip-bestand te downloaden en uit te pakken. Ook moet je python geïnstalleerd hebben, of een omgeving zoals Spyder die python-code kan runnen. De allerlaatste stap is het installeren van de python library 'pygame'. Dit doe je door in de windows command prompt (dit kan trouwens ook in bijvoorbeeld de anaconda command prompt) in te typen 'pip install pygame'. Zodra je dit allemaal gedaan hebt, kun je het spel spelen door het programma 'set_display.py' uit te voeren.
